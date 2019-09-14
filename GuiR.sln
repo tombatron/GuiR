@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuiR", "src\GuiR\GuiR.csproj", "{48A08AF9-7752-4473-A141-3BF387ADDBCB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48A08AF9-7752-4473-A141-3BF387ADDBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A08AF9-7752-4473-A141-3BF387ADDBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48A08AF9-7752-4473-A141-3BF387ADDBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48A08AF9-7752-4473-A141-3BF387ADDBCB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA5AF490-E36C-40C7-BC35-ED6B5316F4BC}
+	EndGlobalSection
+EndGlobal
