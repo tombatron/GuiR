@@ -1,4 +1,6 @@
-﻿using GuiR.Controls.ServerTree;
+﻿using GuiR.Controls;
+using GuiR.Controls.ServerTree;
+using GuiR.Views;
 using System.Windows;
 using System.Windows.Controls;
 

@@ -94,6 +94,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Configuration\Modules\RedisModule.cs" />
+    <Compile Include="Configuration\Modules\ViewModelModule.cs" />
+    <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
+      <DependentUpon>StringKey.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Redis\RedisProxy.cs" />
+    <Compile Include="ViewModels\DelegateCommand.cs" />
+    <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeyDisplay\StringKeyViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeysControlViewModel.cs" />
+    <Compile Include="ViewModels\MainWindow.cs" />
+    <Compile Include="ViewModels\NewServer.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\NewServerDialog.xaml.cs">
+      <DependentUpon>NewServerDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeyDisplay\StringKey.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Keys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SlowLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,15 +135,28 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ServiceLocator.cs" />
+    <Compile Include="Controls\Info.xaml.cs">
+      <DependentUpon>Info.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Keys.xaml.cs">
+      <DependentUpon>Keys.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ServerTree\InfoSubTreeViewItem.cs" />
     <Compile Include="Controls\ServerTree\KeysSubTreeViewItem.cs" />
     <Compile Include="Controls\ServerTree\ServerListTreeView.cs" />
     <Compile Include="Controls\ServerTree\ServerTreeViewItem.cs" />
     <Compile Include="Controls\ServerTree\SlowLogSubTreeViewItem.cs" />
+    <Compile Include="Controls\SlowLog.xaml.cs">
+      <DependentUpon>SlowLog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\NewServerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\RedisServerInformation.cs" />
@@ -140,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="redis_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
