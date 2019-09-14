@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GuiR"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="GuiR" Height="600" Width="900">
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+            <ToolBar IsOverflowOpen="False">
+                <Button x:Name="AddServer" Content="Add Server" Click="AddServer_Click" />
+                <Button x:Name="RemoveServer" Content="Remove Server" Click="RemoveServer_Click" IsEnabled="False" />
+            </ToolBar>
+        </ToolBarTray>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="8*"/>
+            </Grid.ColumnDefinitions>
+
+            <servertree:ServerListTreeView x:Name="Servers" Grid.Column="0" />
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+            <ContentControl x:Name="MainContent" Grid.Column="3" Grid.ColumnSpan="2" />
+        </Grid>
+    </DockPanel>
 </Window>
