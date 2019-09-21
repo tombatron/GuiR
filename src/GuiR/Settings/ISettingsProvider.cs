@@ -6,6 +6,8 @@ namespace GuiR.Settings
 {
     public interface ISettingsProvider
     {
+        string FileLocation { get; }
+
         Task<IEnumerable<RedisServerInformation>> GetServerSettingsAsync();
 
         Task SaveServerSettingsAsync(IEnumerable<RedisServerInformation> serverSettings);
