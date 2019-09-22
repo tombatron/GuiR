@@ -36,6 +36,7 @@ namespace GuiR
 
         private void AddServer_Click(object sender, RoutedEventArgs e)
         {
+            // TODO: Handling here for saving the server settings to the configuration file. 
             var dialog = new NewServerDialog((info) =>
             {
                 Servers.AddServer(info);
