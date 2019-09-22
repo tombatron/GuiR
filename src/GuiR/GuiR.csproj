@@ -95,6 +95,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Configuration\Modules\RedisModule.cs" />
+    <Compile Include="Configuration\Modules\SettingsModule.cs" />
     <Compile Include="Configuration\Modules\ViewModelModule.cs" />
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>

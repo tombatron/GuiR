@@ -17,7 +17,7 @@ namespace GuiR.Settings
 
             FileLocation = Path.Combine(localApplicationDataPath, "GuiR", "servers.config");
         }
-
+ 
         public string FileLocation { get; }
 
         public async Task<IEnumerable<RedisServerInformation>> GetServerSettingsAsync()
