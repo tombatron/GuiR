@@ -38,6 +38,8 @@ namespace GuiR.Settings
 
         public async Task SaveServerSettingsAsync(IEnumerable<RedisServerInformation> serverSettings)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(FileLocation));
+
             using (var file = File.Create(FileLocation))
             using (var writer = new StreamWriter(file))
             {

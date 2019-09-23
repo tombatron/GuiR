@@ -1,5 +1,7 @@
-﻿using GuiR.Controls.ServerTree;
+﻿using GuiR.Configuration;
+using GuiR.Controls.ServerTree;
 using GuiR.Models;
+using GuiR.Settings;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,8 @@ namespace GuiR.Controls
 
     public partial class ServerList : UserControl
     {
+        private readonly ISettingsProvider _settingsProvider;
+
         private ServerTreeViewItem _selectedServer;
 
         public event SelectedItemChanged SelectedItemChanged;
@@ -18,20 +22,24 @@ namespace GuiR.Controls
         {
             InitializeComponent();
 
+            _settingsProvider = ServiceLocator.GetService<ISettingsProvider>();
+
             Servers.SelectedItemChanged += Servers_SelectedItemChanged;
         }
 
-        public Task AddServerAsync(RedisServerInformation serverInfo)
+        public async Task AddServerAsync(RedisServerInformation serverInfo)
         {
             Servers.AddServer(serverInfo);
 
-            return Task.CompletedTask;
+            await _settingsProvider.SaveServerSettingsAsync(Servers.GetAllServerInformation());
         }
             
 
-        public Task RemoveSelectedServerAsync()
+        public async Task RemoveSelectedServerAsync()
         {
             Servers.Items.Remove(_selectedServer);
+
+            await _settingsProvider.SaveServerSettingsAsync(Servers.GetAllServerInformation());
 
             _selectedServer = null;
 
@@ -45,8 +53,6 @@ namespace GuiR.Controls
                     }
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         private void Servers_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
