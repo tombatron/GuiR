@@ -47,9 +47,9 @@ namespace GuiR
 
         private void AddServer_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new NewServerDialog((info) =>
+            var dialog = new NewServerDialog(async (info) =>
             {
-                Servers.AddServer(info);
+                await Servers.AddServerAsync(info);
             });
 
             dialog.Show();

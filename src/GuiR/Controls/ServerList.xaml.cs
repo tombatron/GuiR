@@ -21,8 +21,13 @@ namespace GuiR.Controls
             Servers.SelectedItemChanged += Servers_SelectedItemChanged;
         }
 
-        public void AddServer(RedisServerInformation serverInfo) =>
+        public Task AddServerAsync(RedisServerInformation serverInfo)
+        {
             Servers.AddServer(serverInfo);
+
+            return Task.CompletedTask;
+        }
+            
 
         public Task RemoveSelectedServerAsync()
         {
