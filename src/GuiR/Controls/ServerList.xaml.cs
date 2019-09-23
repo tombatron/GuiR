@@ -68,5 +68,15 @@ namespace GuiR.Controls
 
             SelectedItemChanged(e.NewValue);
         }
+
+        private async void Servers_Loaded(object sender, RoutedEventArgs e)
+        {
+            var servers = await _settingsProvider.GetServerSettingsAsync();
+
+            foreach(var server in servers)
+            {
+                Servers.AddServer(server);
+            }
+        }
     }
 }

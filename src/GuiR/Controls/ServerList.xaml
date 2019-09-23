@@ -6,5 +6,5 @@
              xmlns:servertree="clr-namespace:GuiR.Controls.ServerTree"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <servertree:ServerListTreeView x:Name="Servers" />
+    <servertree:ServerListTreeView x:Name="Servers" Loaded="Servers_Loaded" />
 </UserControl>

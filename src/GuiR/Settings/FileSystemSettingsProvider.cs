@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -22,6 +23,11 @@ namespace GuiR.Settings
 
         public async Task<IEnumerable<RedisServerInformation>> GetServerSettingsAsync()
         {
+            if (!File.Exists(FileLocation))
+            {
+                return Enumerable.Empty<RedisServerInformation>();
+            }
+
             var result = new List<RedisServerInformation>();
 
             using (var file = File.OpenRead(FileLocation))
