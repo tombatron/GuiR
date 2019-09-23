@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GuiR"
-        xmlns:servertree="clr-namespace:GuiR.Controls.ServerTree"
+        xmlns:controls="clr-namespace:GuiR.Controls"
         mc:Ignorable="d"
         Title="GuiR" Height="600" Width="900">
     <DockPanel>
@@ -22,7 +21,7 @@
                 <ColumnDefinition Width="8*"/>
             </Grid.ColumnDefinitions>
 
-            <servertree:ServerListTreeView x:Name="Servers" Grid.Column="0" />
+            <controls:ServerList x:Name="Servers" Grid.Column="0" />
 
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 

@@ -100,6 +100,9 @@
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ServerList.xaml.cs">
+      <DependentUpon>ServerList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Redis\RedisProxy.cs" />
     <Compile Include="Settings\FileSystemSettingsProvider.cs" />
     <Compile Include="Settings\ISettingsProvider.cs" />
@@ -122,6 +125,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Keys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ServerList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
