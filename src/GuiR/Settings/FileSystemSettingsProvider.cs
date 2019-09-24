@@ -33,10 +33,15 @@ namespace GuiR.Settings
             using (var file = File.OpenRead(FileLocation))
             using (var reader = new StreamReader(file))
             {
-                var configurationLine = await reader.ReadLineAsync();
-                var parsedConfiguration = ParseConfigurationLine(configurationLine);
+                string configurationLine;
 
-                result.Add(parsedConfiguration);
+                while((configurationLine = await reader.ReadLineAsync()) != null)
+                {
+                    var parsedConfiguration = ParseConfigurationLine(configurationLine);
+
+                    result.Add(parsedConfiguration);
+                }
+
             }
 
             return result;
@@ -69,7 +74,7 @@ namespace GuiR.Settings
 
             serverName = configurationLineSpan.Slice(0, firstDelimiter).ToString();
             serverAddress = configurationLineSpan.Slice(serverName.Length + 1, (secondDelimiter - serverName.Length) - 1).ToString();
-            serverPort = configurationLineSpan.Slice(secondDelimiter + 1, (configurationLine.Length - secondDelimiter) - 2).ToString();
+            serverPort = configurationLineSpan.Slice(secondDelimiter + 1, (configurationLine.Length - secondDelimiter) - 1).ToString();
 
             return new RedisServerInformation
             {
