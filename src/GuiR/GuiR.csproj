@@ -97,6 +97,9 @@
     <Compile Include="Configuration\Modules\RedisModule.cs" />
     <Compile Include="Configuration\Modules\SettingsModule.cs" />
     <Compile Include="Configuration\Modules\ViewModelModule.cs" />
+    <Compile Include="Controls\KeyDisplay\ListKey.xaml.cs">
+      <DependentUpon>ListKey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,7 @@
     <Compile Include="Settings\ISettingsProvider.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\StringKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeysControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindow.cs" />
@@ -117,6 +121,10 @@
       <DependentUpon>NewServerDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeyDisplay\ListKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

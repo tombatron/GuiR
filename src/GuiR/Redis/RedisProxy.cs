@@ -88,6 +88,16 @@ namespace GuiR.Redis
             return await database.StringGetAsync(key);
         }
 
+        public async ValueTask<IEnumerable<string>> GetListValueAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var database = muxr.GetDatabase(databaseId);
+
+            var result = await database.ListRangeAsync(key);
+
+            return result.Select(r => r.ToString());
+        }
+
         public void Dispose()
         {
             foreach (var muxr in _muxrs.Values)
