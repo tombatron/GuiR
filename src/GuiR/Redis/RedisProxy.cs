@@ -98,6 +98,14 @@ namespace GuiR.Redis
             return result.Select(r => r.ToString());
         }
 
+        public async ValueTask<string> GetKeyTypeAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var database = muxr.GetDatabase(databaseId);
+
+            return (await database.KeyTypeAsync(key)).ToString();
+        }
+
         public void Dispose()
         {
             foreach (var muxr in _muxrs.Values)
