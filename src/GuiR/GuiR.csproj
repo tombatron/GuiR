@@ -107,6 +107,7 @@
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Redis\RedisProxy.cs" />
+    <Compile Include="Redis\RedisTypes.cs" />
     <Compile Include="Settings\FileSystemSettingsProvider.cs" />
     <Compile Include="Settings\ISettingsProvider.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
