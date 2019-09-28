@@ -18,11 +18,5 @@ namespace GuiR.Controls.KeyDisplay
 
             InitializeComponent();
         }
-
-        private async void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // TODO: Change this to a command that is invoke on load. 
-            await ((StringKeyViewModel)DataContext).LoadValue();
-        }
     }
 }
