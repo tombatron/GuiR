@@ -15,6 +15,7 @@ namespace GuiR.Configuration.Modules
             builder.RegisterType<KeysControlViewModel>();
 
             builder.RegisterType<StringKeyViewModel>();
+            builder.RegisterType<ListKeyViewModel>();
         }
     }
 }
