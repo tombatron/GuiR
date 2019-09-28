@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GuiR.Controls"
+             xmlns:keydisplay="clr-namespace:GuiR.Controls.KeyDisplay"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="0,0,0,0">
@@ -55,9 +56,8 @@
             <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}">Refresh</Button>
         </Grid>
 
-        <ListBox Grid.Column="0" Grid.Row="1" Height="Auto" Margin="9,10,10,10" ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ListBox_SelectionChanged" SelectedItem="{Binding SelectedKey}"  />
+        <ListBox Grid.Column="0" Grid.Row="1" Height="Auto" Margin="9,10,10,10" ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding ElementName=KeyContent, Path=CurrentKey}"  />
 
-        <ContentControl x:Name="KeyContent" Grid.Row="1" Grid.Column="1" />
-
+        <keydisplay:KeyDisplayContainer x:Name="KeyContent" Grid.Row="1" Grid.Column="1" ServerInfo="{Binding ServerInfo, UpdateSourceTrigger=Default}" DatabaseId="{Binding DatabaseId, UpdateSourceTrigger=Default}" />
     </Grid>
 </UserControl>

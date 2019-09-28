@@ -103,7 +103,7 @@ namespace GuiR.Redis
             var muxr = await GetConnectionMultiplexerAsync(serverInfo);
             var database = muxr.GetDatabase(databaseId);
 
-            return (await database.KeyTypeAsync(key)).ToString();
+            return (await database.KeyTypeAsync(key)).ToString().ToLowerInvariant();
         }
 
         public void Dispose()

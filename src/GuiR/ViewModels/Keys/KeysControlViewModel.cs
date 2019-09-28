@@ -58,20 +58,5 @@ namespace GuiR.ViewModels.Keys
             {
                 KeysList = await _redis.GetKeysAsync(ServerInfo, DatabaseId, KeyFilter);
             });
-
-
-        // TODO: Put logic here that determines the key type. 
-        // TODO: Create a new control that we can data bind the key and type to.
-        //       The new control will be in charge of determining how to display the key.
-
-        private string _selectedKey;
-        public string SelectedKey
-        {
-            get => _selectedKey;
-
-            set => _selectedKey = value;
-        }
-
-        public string SelectedKeyType { get; set; }
     }
 }

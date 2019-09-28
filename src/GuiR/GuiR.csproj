@@ -97,6 +97,9 @@
     <Compile Include="Configuration\Modules\RedisModule.cs" />
     <Compile Include="Configuration\Modules\SettingsModule.cs" />
     <Compile Include="Configuration\Modules\ViewModelModule.cs" />
+    <Compile Include="Controls\KeyDisplay\KeyDisplayContainer.xaml.cs">
+      <DependentUpon>KeyDisplayContainer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeyDisplay\ListKey.xaml.cs">
       <DependentUpon>ListKey.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
       <DependentUpon>NewServerDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeyDisplay\KeyDisplayContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
