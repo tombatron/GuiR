@@ -14,6 +14,8 @@ namespace GuiR.Controls.KeyDisplay
             viewModel.DatabaseId = databaseId;
             viewModel.Key = key;
 
+            DataContext = viewModel;
+
             InitializeComponent();
         }
     }

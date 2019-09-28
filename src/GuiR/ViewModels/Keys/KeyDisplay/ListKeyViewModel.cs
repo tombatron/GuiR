@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using GuiR.Models;
+﻿using GuiR.Models;
 using GuiR.Redis;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys.KeyDisplay

@@ -30,6 +30,7 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 
         public int DatabaseId { get; set; }
 
+        // TODO: Figure out how to invoke this via a behavior...
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
