@@ -4,5 +4,6 @@
     {
         public const string StringType = "string";
         public const string ListType = "list";
+        public const string HashType = "hash";
     }
 }
