@@ -20,7 +20,7 @@ namespace GuiR.Controls.ServerTree
             Header = ServerName;
 
             Items.Add(new KeysSubTreeViewItem(this));
-            Items.Add(new SlowLogSubTreeViewItem(this));
+            //Items.Add(new SlowLogSubTreeViewItem(this));
             Items.Add(new InfoSubTreeViewItem(this));
         }
     }
