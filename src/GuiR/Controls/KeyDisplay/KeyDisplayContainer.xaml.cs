@@ -72,6 +72,9 @@ namespace GuiR.Controls.KeyDisplay
                     case RedisTypes.ListType:
                         KeyContent.Content = new ListKey(ServerInfo, DatabaseId, CurrentKey);
                         break;
+                    case RedisTypes.HashType:
+                        KeyContent.Content = new HashKey(ServerInfo, DatabaseId, CurrentKey);
+                        break;
                     default:
                         KeyContent.Content = null;
                         break;
