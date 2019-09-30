@@ -4,9 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GuiR.Controls.KeyDisplay"
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <Behaviors:Interaction.Triggers>
+        <Behaviors:EventTrigger EventName="Loaded">
+            <Behaviors:InvokeCommandAction Command="{Binding LoadKeyValue}" />
+        </Behaviors:EventTrigger>
+    </Behaviors:Interaction.Triggers>
+
     <Grid>
-            
+        <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5">
+            <DataGrid x:Name="HashItems" ItemsSource="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>
