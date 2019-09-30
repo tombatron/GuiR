@@ -112,6 +112,7 @@
     <Compile Include="Controls\ServerList.xaml.cs">
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\HashEntry.cs" />
     <Compile Include="Redis\RedisProxy.cs" />
     <Compile Include="Redis\RedisTypes.cs" />
     <Compile Include="Settings\FileSystemSettingsProvider.cs" />
