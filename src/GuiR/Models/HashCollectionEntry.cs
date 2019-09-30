@@ -1,6 +1,6 @@
 ﻿namespace GuiR.Models
 {
-    public struct HashEntry
+    public struct HashCollectionEntry
     {
         public string Key { get; set; }
 
