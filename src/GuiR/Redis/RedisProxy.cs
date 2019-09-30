@@ -106,6 +106,16 @@ namespace GuiR.Redis
             return (await database.KeyTypeAsync(key)).ToString().ToLowerInvariant();
         }
 
+        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var database = muxr.GetDatabase(databaseId);
+
+            var result = await database.HashGetAllAsync(key);
+
+            return result.Select(r => new HashCollectionEntry(r));
+        }
+
         public void Dispose()
         {
             foreach (var muxr in _muxrs.Values)
