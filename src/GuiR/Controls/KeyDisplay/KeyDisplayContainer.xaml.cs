@@ -47,21 +47,20 @@ namespace GuiR.Controls.KeyDisplay
             }
             else
             {
-                // TODO: Remove ServerInfo and DatabaseId requirement from the redis proxy methods, we'll get those from the server context.
-                var keyType = await _redis.GetKeyTypeAsync(ServerInfo, DatabaseId, CurrentKey);
+                var keyType = await _redis.GetKeyTypeAsync(CurrentKey);
 
                 switch(keyType)
                 {
                     // TODO: Simplify the required constructor parameters for stringkey, listkey, and hashkey by removing serverinfo and databaseid...
 
                     case RedisTypes.StringType:
-                        KeyContent.Content = new StringKey(ServerInfo, DatabaseId, CurrentKey);
+                        KeyContent.Content = new StringKey(CurrentKey);
                         break;
                     case RedisTypes.ListType:
-                        KeyContent.Content = new ListKey(ServerInfo, DatabaseId, CurrentKey);
+                        KeyContent.Content = new ListKey(CurrentKey);
                         break;
                     case RedisTypes.HashType:
-                        KeyContent.Content = new HashKey(ServerInfo, DatabaseId, CurrentKey);
+                        KeyContent.Content = new HashKey(CurrentKey);
                         break;
                     default:
                         KeyContent.Content = null;
