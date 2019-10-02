@@ -1,5 +1,4 @@
-﻿using GuiR.Models;
-using GuiR.Redis;
+﻿using GuiR.Redis;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -8,7 +7,7 @@ namespace GuiR.ViewModels.Keys
     public class KeysControlViewModel : ViewModelBase
     {
         private readonly RedisProxy _redis;
-        public RedisServerInformation ServerInfo { get; set; }
+        private readonly IServerContext _serverContext;
 
         private int _databaseId = 0;
         public int DatabaseId
@@ -18,6 +17,7 @@ namespace GuiR.ViewModels.Keys
             set
             {
                 _databaseId = value;
+                _serverContext.DatabaseId = value;
 
                 RaisePropertyChangedEvent(nameof(DatabaseId));
             }
@@ -51,12 +51,16 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        public KeysControlViewModel(RedisProxy redis) => _redis = redis;
+        public KeysControlViewModel(RedisProxy redis, IServerContext serverContext)
+        {
+            _redis = redis;
+            _serverContext = serverContext;
+        }
 
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
-                KeysList = await _redis.GetKeysAsync(ServerInfo, DatabaseId, KeyFilter);
+                KeysList = await _redis.GetKeysAsync(_serverContext.ServerInfo, DatabaseId, KeyFilter);
             });
     }
 }

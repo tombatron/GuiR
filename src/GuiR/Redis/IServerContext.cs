@@ -2,7 +2,7 @@
 
 namespace GuiR.Redis
 {
-    interface IServerContext
+    public interface IServerContext
     {
         RedisServerInformation ServerInfo { get; set; }
 

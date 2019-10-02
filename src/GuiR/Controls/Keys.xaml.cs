@@ -1,5 +1,4 @@
 ﻿using GuiR.Configuration;
-using GuiR.Models;
 using GuiR.ViewModels.Keys;
 using System.Windows.Controls;
 
@@ -7,14 +6,11 @@ namespace GuiR.Controls
 {
     public partial class Keys : UserControl
     {
-        public Keys(RedisServerInformation serverInfo)
+        public Keys()
         {
-            var viewModel = ServiceLocator.GetService<KeysControlViewModel>();
-            viewModel.ServerInfo = serverInfo;
-
             InitializeComponent();
 
-            DataContext = viewModel;
+            DataContext = ServiceLocator.GetService<KeysControlViewModel>();
         }
     }
 }

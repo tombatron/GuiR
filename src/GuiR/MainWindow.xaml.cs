@@ -19,7 +19,7 @@ namespace GuiR
         {
             if (newValue is KeysSubTreeViewItem)
             {
-                MainContent.Content = new Keys(((KeysSubTreeViewItem)newValue).ParentTreeItem.ServerInfo);
+                MainContent.Content = new Keys();
             }
 
             if (newValue is SlowLogSubTreeViewItem)
