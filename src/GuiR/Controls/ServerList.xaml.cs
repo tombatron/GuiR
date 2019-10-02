@@ -28,7 +28,6 @@ namespace GuiR.Controls
             _serverContext = ServiceLocator.GetService<IServerContext>();
 
             Servers.SelectedItemChanged += Servers_SelectedItemChanged;
-            Servers.SelectedItemChanged += Servers_SelectedSubItemChanged;
         }
 
         public async Task AddServerAsync(RedisServerInformation serverInfo)
@@ -37,7 +36,7 @@ namespace GuiR.Controls
 
             await _settingsProvider.SaveServerSettingsAsync(Servers.GetAllServerInformation());
         }
-            
+
 
         public async Task RemoveSelectedServerAsync()
         {
@@ -66,6 +65,10 @@ namespace GuiR.Controls
                 _selectedServer = e.NewValue as ServerTreeViewItem;
                 _serverContext.ServerInfo = _selectedServer.ServerInfo;
             }
+            else if (e.NewValue is IServerSubTreeViewItem)
+            {
+                _serverContext.ServerInfo = (e.NewValue as IServerSubTreeViewItem).ParentTreeItem.ServerInfo;
+            }
             else
             {
                 _selectedServer = null;
@@ -75,19 +78,11 @@ namespace GuiR.Controls
             SelectedItemChanged(e.NewValue);
         }
 
-        private void Servers_SelectedSubItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (e.NewValue is IServerSubTreeViewItem)
-            {
-                _serverContext.ServerInfo = (e.NewValue as IServerSubTreeViewItem).ParentTreeItem.ServerInfo;
-            }
-        }
-
         private async void Servers_Loaded(object sender, RoutedEventArgs e)
         {
             var servers = await _settingsProvider.GetServerSettingsAsync();
 
-            foreach(var server in servers)
+            foreach (var server in servers)
             {
                 Servers.AddServer(server);
             }

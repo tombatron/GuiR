@@ -21,6 +21,6 @@ namespace GuiR.Controls
         }
 
         private async void UserControl_Initialized(object sender, System.EventArgs e) =>
-            await _viewModel.LoadAsync(_serverInfo);
+            await _viewModel.LoadAsync();
     }
 }

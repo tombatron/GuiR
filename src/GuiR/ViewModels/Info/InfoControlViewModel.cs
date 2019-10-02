@@ -23,7 +23,7 @@ namespace GuiR.ViewModels.Info
             }
         }
 
-        public async ValueTask<string> LoadAsync(RedisServerInformation serverInfo) =>
+        public async ValueTask<string> LoadAsync() =>
             Info = await _redis.GetInfoAsync();
     }
 }
