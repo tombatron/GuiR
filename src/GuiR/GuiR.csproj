@@ -116,6 +116,7 @@
     <Compile Include="Controls\ServerList.xaml.cs">
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ServerTree\IServerTreeViewItem.cs" />
     <Compile Include="Models\HashCollectionEntry.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
     <Compile Include="Redis\IServerContext.cs" />

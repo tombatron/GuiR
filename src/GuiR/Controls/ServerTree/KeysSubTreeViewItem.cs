@@ -2,7 +2,7 @@
 
 namespace GuiR.Controls.ServerTree
 {
-    public class KeysSubTreeViewItem : TreeViewItem
+    public class KeysSubTreeViewItem : TreeViewItem, IServerTreeViewItem
     {
         public ServerTreeViewItem ParentTreeItem { get; }
 

@@ -2,7 +2,7 @@
 
 namespace GuiR.Controls.ServerTree
 {
-    public class SlowLogSubTreeViewItem : TreeViewItem
+    public class SlowLogSubTreeViewItem : TreeViewItem, IServerTreeViewItem
     {
         public ServerTreeViewItem ParentTreeItem { get; }
 
