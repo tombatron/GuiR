@@ -14,9 +14,13 @@ namespace GuiR.Redis
         private readonly ConcurrentDictionary<RedisServerInformation, ConnectionMultiplexer> _muxrs =
             new ConcurrentDictionary<RedisServerInformation, ConnectionMultiplexer>();
 
-        public async ValueTask<string> GetInfoAsync(RedisServerInformation serverInfo)
+        private readonly IServerContext _serverContext;
+
+        public RedisProxy(IServerContext serverContext) => _serverContext = serverContext;
+
+        public async ValueTask<string> GetInfoAsync()
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
             var firstEndpoint = muxr.GetEndPoints()[0];
             var server = muxr.GetServer(firstEndpoint);
 
@@ -37,9 +41,9 @@ namespace GuiR.Redis
             return result.ToString();
         }
 
-        public async ValueTask<string> GetSlowLogAsync(RedisServerInformation serverInfo)
+        public async ValueTask<string> GetSlowLogAsync()
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
             var firstEndpoint = muxr.GetEndPoints()[0];
             var server = muxr.GetServer(firstEndpoint);
 
@@ -48,15 +52,15 @@ namespace GuiR.Redis
             return default;
         }
 
-        public async ValueTask<List<string>> GetKeysAsync(RedisServerInformation serverInfo, int databaseId, string filter)
+        public async ValueTask<List<string>> GetKeysAsync(string filter)
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
             var firstEndpoint = muxr.GetEndPoints().First();
             var server = muxr.GetServer(firstEndpoint);
 
             var result = new List<string>();
 
-            foreach (var key in server.Keys(databaseId, pattern: filter))
+            foreach (var key in server.Keys(_serverContext.DatabaseId, pattern: filter))
             {
                 result.Add(key);
             }
@@ -80,36 +84,36 @@ namespace GuiR.Redis
             }
         }
 
-        public async ValueTask<string> GetStringValueAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        public async ValueTask<string> GetStringValueAsync(string key)
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
-            var database = muxr.GetDatabase(databaseId);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
             return await database.StringGetAsync(key);
         }
 
-        public async ValueTask<IEnumerable<string>> GetListValueAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        public async ValueTask<IEnumerable<string>> GetListValueAsync(string key)
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
-            var database = muxr.GetDatabase(databaseId);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
             var result = await database.ListRangeAsync(key);
 
             return result.Select(r => r.ToString());
         }
 
-        public async ValueTask<string> GetKeyTypeAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        public async ValueTask<string> GetKeyTypeAsync(string key)
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
-            var database = muxr.GetDatabase(databaseId);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
             return (await database.KeyTypeAsync(key)).ToString().ToLowerInvariant();
         }
 
-        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(RedisServerInformation serverInfo, int databaseId, string key)
+        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key)
         {
-            var muxr = await GetConnectionMultiplexerAsync(serverInfo);
-            var database = muxr.GetDatabase(databaseId);
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
             var result = await database.HashGetAllAsync(key);
 
