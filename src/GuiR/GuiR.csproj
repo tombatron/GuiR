@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Configuration\Modules\ContextModule.cs" />
     <Compile Include="Configuration\Modules\RedisModule.cs" />
     <Compile Include="Configuration\Modules\SettingsModule.cs" />
     <Compile Include="Configuration\Modules\ViewModelModule.cs" />

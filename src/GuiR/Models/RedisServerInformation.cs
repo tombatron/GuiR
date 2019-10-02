@@ -2,7 +2,7 @@
 
 namespace GuiR.Models
 {
-    public struct RedisServerInformation
+    public class RedisServerInformation
     {
         public string ServerName { get; set; }
 

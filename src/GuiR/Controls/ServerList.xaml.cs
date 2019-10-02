@@ -1,6 +1,7 @@
 ﻿using GuiR.Configuration;
 using GuiR.Controls.ServerTree;
 using GuiR.Models;
+using GuiR.Redis;
 using GuiR.Settings;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace GuiR.Controls
     public partial class ServerList : UserControl
     {
         private readonly ISettingsProvider _settingsProvider;
+        private readonly IServerContext _serverContext;
 
         private ServerTreeViewItem _selectedServer;
 
@@ -23,6 +25,7 @@ namespace GuiR.Controls
             InitializeComponent();
 
             _settingsProvider = ServiceLocator.GetService<ISettingsProvider>();
+            _serverContext = ServiceLocator.GetService<IServerContext>();
 
             Servers.SelectedItemChanged += Servers_SelectedItemChanged;
         }
@@ -60,10 +63,12 @@ namespace GuiR.Controls
             if (e.NewValue is ServerTreeViewItem)
             {
                 _selectedServer = e.NewValue as ServerTreeViewItem;
+                _serverContext.ServerInfo = _selectedServer.ServerInfo;
             }
             else
             {
                 _selectedServer = null;
+                _serverContext.ServerInfo = null;
             }
 
             SelectedItemChanged(e.NewValue);
