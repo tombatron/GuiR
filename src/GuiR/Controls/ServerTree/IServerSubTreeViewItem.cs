@@ -1,6 +1,6 @@
 ﻿namespace GuiR.Controls.ServerTree
 {
-    interface IServerTreeViewItem
+    interface IServerSubTreeViewItem
     {
         ServerTreeViewItem ParentTreeItem { get; }
     }
