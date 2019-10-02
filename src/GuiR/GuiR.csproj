@@ -116,6 +116,8 @@
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\HashCollectionEntry.cs" />
+    <Compile Include="Redis\DefaultServerContext.cs" />
+    <Compile Include="Redis\IServerContext.cs" />
     <Compile Include="Redis\RedisProxy.cs" />
     <Compile Include="Redis\RedisTypes.cs" />
     <Compile Include="Settings\FileSystemSettingsProvider.cs" />
