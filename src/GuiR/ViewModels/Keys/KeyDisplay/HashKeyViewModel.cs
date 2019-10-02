@@ -26,15 +26,10 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             }
         }
 
-        public RedisServerInformation ServerInfo { get; set; }
-
-        public int DatabaseId { get; set; }
-
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () => 
             {
-                KeyValue = await _redis.GetHashAsync(ServerInfo, DatabaseId, Key);
+                KeyValue = await _redis.GetHashAsync(Key);
             });
-
     }
 }

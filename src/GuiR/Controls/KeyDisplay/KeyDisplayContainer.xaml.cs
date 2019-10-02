@@ -13,10 +13,6 @@ namespace GuiR.Controls.KeyDisplay
 
         private string _currentKey;
         private RedisProxy _redis;
-        private IServerContext _serverContext;
-
-        private RedisServerInformation _serverInfo;
-        private int _databaseId;
 
         public string CurrentKey
         {

@@ -60,7 +60,7 @@ namespace GuiR.ViewModels.Keys
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
-                KeysList = await _redis.GetKeysAsync(_serverContext.ServerInfo, DatabaseId, KeyFilter);
+                KeysList = await _redis.GetKeysAsync(KeyFilter);
             });
     }
 }

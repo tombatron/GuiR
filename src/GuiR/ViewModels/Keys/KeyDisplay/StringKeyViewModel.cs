@@ -1,5 +1,4 @@
-﻿using GuiR.Models;
-using GuiR.Redis;
+﻿using GuiR.Redis;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys.KeyDisplay
@@ -25,14 +24,10 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             }
         }
 
-        public RedisServerInformation ServerInfo { get; set; }
-
-        public int DatabaseId { get; set; }
-
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
-                KeyValue = await _redis.GetStringValueAsync(ServerInfo, DatabaseId, Key);
+                KeyValue = await _redis.GetStringValueAsync(Key);
             });
     }
 }

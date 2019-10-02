@@ -58,6 +58,6 @@
 
         <ListBox Grid.Column="0" Grid.Row="1" Height="Auto" Margin="9,10,10,10" ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding ElementName=KeyContent, Path=CurrentKey}"  />
 
-        <keydisplay:KeyDisplayContainer x:Name="KeyContent" Grid.Row="1" Grid.Column="1" ServerInfo="{Binding ServerInfo, UpdateSourceTrigger=Default}" DatabaseId="{Binding DatabaseId, UpdateSourceTrigger=Default}" />
+        <keydisplay:KeyDisplayContainer x:Name="KeyContent" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </UserControl>
