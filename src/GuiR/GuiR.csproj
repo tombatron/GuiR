@@ -111,6 +111,9 @@
       <DependentUpon>ListKey.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\KeyDisplay\SetKey.cs" />
+    <Compile Include="Controls\KeyDisplay\SortedSetKey.xaml.cs">
+      <DependentUpon>SortedSetKey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>
     </Compile>
@@ -153,6 +156,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\KeyDisplay\ListKey.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeyDisplay\SortedSetKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
