@@ -13,7 +13,7 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 
         public string Key { get; set; }
 
-        public IEnumerable<HashCollectionEntry> _keyValue;
+        private IEnumerable<HashCollectionEntry> _keyValue;
         public IEnumerable<HashCollectionEntry> KeyValue
         {
             get => _keyValue;
