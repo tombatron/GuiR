@@ -28,7 +28,7 @@ namespace GuiR.Redis
 
             var result = new StringBuilder();
 
-            foreach (var grouping in infoResult)
+            foreach (var grouping in infoResult) 
             {
                 result.AppendLine(grouping.Key);
 
