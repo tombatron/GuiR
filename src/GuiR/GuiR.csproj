@@ -110,6 +110,7 @@
     <Compile Include="Controls\KeyDisplay\ListKey.xaml.cs">
       <DependentUpon>ListKey.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyDisplay\SetKey.cs" />
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>
     </Compile>
@@ -128,6 +129,7 @@
     <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\HashKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeyDisplay\SetKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\StringKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeysControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindow.cs" />

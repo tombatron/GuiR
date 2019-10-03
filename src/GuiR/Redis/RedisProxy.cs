@@ -28,7 +28,7 @@ namespace GuiR.Redis
 
             var result = new StringBuilder();
 
-            foreach (var grouping in infoResult) 
+            foreach (var grouping in infoResult)
             {
                 result.AppendLine(grouping.Key);
 
@@ -98,6 +98,16 @@ namespace GuiR.Redis
             var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
             var result = await database.ListRangeAsync(key);
+
+            return result.Select(r => r.ToString());
+        }
+
+        public async ValueTask<IEnumerable<string>> GetSetValueAsync(string key)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+
+            var result = await database.SetMembersAsync(key);
 
             return result.Select(r => r.ToString());
         }

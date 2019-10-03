@@ -1,12 +1,13 @@
 ﻿using GuiR.Redis;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys.KeyDisplay
 {
     public class ListKeyViewModel : ViewModelBase
     {
-        private readonly RedisProxy _redis;
+        protected readonly RedisProxy _redis;
 
         public ListKeyViewModel(RedisProxy redis) => _redis = redis;
 
@@ -28,7 +29,10 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
-                KeyValue = await _redis.GetListValueAsync(Key);
+                KeyValue = await GetDataAsync(Key); //_redis.GetListValueAsync(Key);
             });
+
+        protected virtual ValueTask<IEnumerable<string>> GetDataAsync(string key) =>
+            _redis.GetListValueAsync(key);
     }
 }
