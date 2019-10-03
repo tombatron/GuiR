@@ -1,5 +1,4 @@
 ﻿using GuiR.Configuration;
-using GuiR.Models;
 using GuiR.Redis;
 using System.Windows.Controls;
 
@@ -47,8 +46,6 @@ namespace GuiR.Controls.KeyDisplay
 
                 switch(keyType)
                 {
-                    // TODO: Simplify the required constructor parameters for stringkey, listkey, and hashkey by removing serverinfo and databaseid...
-
                     case RedisTypes.StringType:
                         KeyContent.Content = new StringKey(CurrentKey);
                         break;
@@ -57,6 +54,9 @@ namespace GuiR.Controls.KeyDisplay
                         break;
                     case RedisTypes.HashType:
                         KeyContent.Content = new HashKey(CurrentKey);
+                        break;
+                    case RedisTypes.SetType:
+                        KeyContent.Content = new SetKey(CurrentKey);
                         break;
                     default:
                         KeyContent.Content = null;
