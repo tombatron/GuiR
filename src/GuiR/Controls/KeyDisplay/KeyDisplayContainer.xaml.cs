@@ -58,6 +58,9 @@ namespace GuiR.Controls.KeyDisplay
                     case RedisTypes.SetType:
                         KeyContent.Content = new SetKey(CurrentKey);
                         break;
+                    case RedisTypes.SortedSetType:
+                        KeyContent.Content = new SortedSetKey(CurrentKey);
+                        break;
                     default:
                         KeyContent.Content = null;
                         break;

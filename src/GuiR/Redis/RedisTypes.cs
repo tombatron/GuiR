@@ -6,5 +6,6 @@
         public const string ListType = "list";
         public const string HashType = "hash";
         public const string SetType = "set";
+        public const string SortedSetType = "sortedset";
     }
 }
