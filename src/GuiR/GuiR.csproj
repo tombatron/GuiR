@@ -119,7 +119,7 @@
     </Compile>
     <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
     <Compile Include="Models\HashCollectionEntry.cs" />
-    <Compile Include="Models\SortedSetEntry.cs" />
+    <Compile Include="Models\SortedSetCollectionEntry.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
     <Compile Include="Redis\IServerContext.cs" />
     <Compile Include="Redis\RedisProxy.cs" />

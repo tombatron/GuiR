@@ -130,7 +130,15 @@ namespace GuiR.Redis
             return result.Select(r => new HashCollectionEntry(r));
         }
 
+        public async ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
+            var result = await database.SortedSetRangeByScoreWithScoresAsync(key);
+
+            return result.Select(r => new SortedSetCollectionEntry(r));
+        }
 
         public void Dispose()
         {
