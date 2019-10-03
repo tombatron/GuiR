@@ -130,6 +130,8 @@ namespace GuiR.Redis
             return result.Select(r => new HashCollectionEntry(r));
         }
 
+
+
         public void Dispose()
         {
             foreach (var muxr in _muxrs.Values)
