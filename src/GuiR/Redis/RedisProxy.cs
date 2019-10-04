@@ -18,6 +18,14 @@ namespace GuiR.Redis
 
         public RedisProxy(IServerContext serverContext) => _serverContext = serverContext;
 
+        private async ValueTask<TResult> WithDatabase<TResult>(Func<IDatabase, Task<TResult>> databaseAction)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+
+            return await databaseAction(database);
+        }
+
         public async ValueTask<string> GetInfoAsync()
         {
             var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
@@ -84,61 +92,23 @@ namespace GuiR.Redis
             }
         }
 
-        public async ValueTask<string> GetStringValueAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+        public async ValueTask<string> GetStringValueAsync(string key) =>
+            await WithDatabase(async (db) => await db.StringGetAsync(key));
 
-            return await database.StringGetAsync(key);
-        }
+        public async ValueTask<IEnumerable<string>> GetListValueAsync(string key) =>
+            await WithDatabase(async (db) => (await db.ListRangeAsync(key)).Select(r => r.ToString()));
 
-        public async ValueTask<IEnumerable<string>> GetListValueAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+        public async ValueTask<IEnumerable<string>> GetSetValueAsync(string key) =>
+            await WithDatabase(async (db) => (await db.SetMembersAsync(key)).Select(r => r.ToString()));
 
-            var result = await database.ListRangeAsync(key);
+        public async ValueTask<string> GetKeyTypeAsync(string key) =>
+            await WithDatabase(async (db) => (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant());
 
-            return result.Select(r => r.ToString());
-        }
+        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key) =>
+            await WithDatabase(async (db) => (await db.HashGetAllAsync(key)).Select(r => new HashCollectionEntry(r)));
 
-        public async ValueTask<IEnumerable<string>> GetSetValueAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
-
-            var result = await database.SetMembersAsync(key);
-
-            return result.Select(r => r.ToString());
-        }
-
-        public async ValueTask<string> GetKeyTypeAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
-
-            return (await database.KeyTypeAsync(key)).ToString().ToLowerInvariant();
-        }
-
-        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
-
-            var result = await database.HashGetAllAsync(key);
-
-            return result.Select(r => new HashCollectionEntry(r));
-        }
-
-        public async ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
-
-            var result = await database.SortedSetRangeByScoreWithScoresAsync(key);
-
-            return result.Select(r => new SortedSetCollectionEntry(r));
-        }
+        public async ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
+            await WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
 
         public void Dispose()
         {
