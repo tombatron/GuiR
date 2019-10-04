@@ -18,79 +18,46 @@ namespace GuiR.Redis
 
         public RedisProxy(IServerContext serverContext) => _serverContext = serverContext;
 
-        private async ValueTask<TResult> WithDatabase<TResult>(Func<IDatabase, Task<TResult>> databaseAction)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
-
-            return await databaseAction(database);
-        }
-
-        public async ValueTask<string> GetInfoAsync()
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var firstEndpoint = muxr.GetEndPoints()[0];
-            var server = muxr.GetServer(firstEndpoint);
-
-            var infoResult = await server.InfoAsync();
-
-            var result = new StringBuilder();
-
-            foreach (var grouping in infoResult)
+        public ValueTask<string> GetInfoAsync() =>
+            WithServer(async (server) => 
             {
-                result.AppendLine(grouping.Key);
+                var infoResult = await server.InfoAsync();
 
-                foreach (var item in grouping)
+                var result = new StringBuilder(2000);
+
+                foreach (var grouping in infoResult)
                 {
-                    result.AppendLine($"{item.Key} | {item.Value}");
+                    result.AppendLine(grouping.Key);
+
+                    foreach(var item in grouping)
+                    {
+                        result.AppendLine($"{item.Key} | {item.Value} ");
+                    }
                 }
-            }
 
-            return result.ToString();
-        }
+                return result.ToString();
+            });
 
-        public async ValueTask<string> GetSlowLogAsync()
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var firstEndpoint = muxr.GetEndPoints()[0];
-            var server = muxr.GetServer(firstEndpoint);
-
-            var slowLogResult = await server.SlowlogGetAsync();
-
-            return default;
-        }
-
-        public async ValueTask<List<string>> GetKeysAsync(string filter)
-        {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var firstEndpoint = muxr.GetEndPoints().First();
-            var server = muxr.GetServer(firstEndpoint);
-
-            var result = new List<string>();
-
-            foreach (var key in server.Keys(_serverContext.DatabaseId, pattern: filter))
+        public ValueTask<string> GetSlowLogAsync() =>
+            WithServer<string>(async (server) => 
             {
-                result.Add(key);
-            }
+                var slowLogResult = await server.SlowlogGetAsync();
 
-            return result;
-        }
+                return default;
+            });
 
-        private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
-        {
-            if (_muxrs.TryGetValue(serverInfo, out var existingMuxr))
+        public ValueTask<List<string>> GetKeysAsync(string filter) =>
+            WithServer((server) => 
             {
-                return existingMuxr;
-            }
-            else
-            {
-                var muxr = await ConnectionMultiplexer.ConnectAsync(serverInfo);
+                var result = new List<string>();
 
-                _muxrs.TryAdd(serverInfo, muxr);
+                foreach (var key in server.Keys(_serverContext.DatabaseId, pattern: filter))
+                {
+                    result.Add(key);
+                }
 
-                return muxr;
-            }
-        }
+                return Task.FromResult(result);
+            });
 
         public ValueTask<string> GetStringValueAsync(string key) =>
             WithDatabase(async (db) => (string)await db.StringGetAsync(key));
@@ -109,6 +76,39 @@ namespace GuiR.Redis
 
         public ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
             WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
+
+        private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
+        {
+            if (_muxrs.TryGetValue(serverInfo, out var existingMuxr))
+            {
+                return existingMuxr;
+            }
+            else
+            {
+                var muxr = await ConnectionMultiplexer.ConnectAsync(serverInfo);
+
+                _muxrs.TryAdd(serverInfo, muxr);
+
+                return muxr;
+            }
+        }
+
+        private async ValueTask<TResult> WithDatabase<TResult>(Func<IDatabase, Task<TResult>> databaseAction)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+
+            return await databaseAction(database);
+        }
+
+        private async ValueTask<TResult> WithServer<TResult>(Func<IServer, Task<TResult>> serverAction)
+        {
+            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+            var firstEndpoint = muxr.GetEndPoints()[0];
+            var server = muxr.GetServer(firstEndpoint);
+
+            return await serverAction(server);
+        }
 
         public void Dispose()
         {
