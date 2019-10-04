@@ -92,23 +92,23 @@ namespace GuiR.Redis
             }
         }
 
-        public async ValueTask<string> GetStringValueAsync(string key) =>
-            await WithDatabase(async (db) => await db.StringGetAsync(key));
+        public ValueTask<string> GetStringValueAsync(string key) =>
+            WithDatabase(async (db) => (string)await db.StringGetAsync(key));
 
-        public async ValueTask<IEnumerable<string>> GetListValueAsync(string key) =>
-            await WithDatabase(async (db) => (await db.ListRangeAsync(key)).Select(r => r.ToString()));
+        public ValueTask<IEnumerable<string>> GetListValueAsync(string key) =>
+            WithDatabase(async (db) => (await db.ListRangeAsync(key)).Select(r => r.ToString()));
 
-        public async ValueTask<IEnumerable<string>> GetSetValueAsync(string key) =>
-            await WithDatabase(async (db) => (await db.SetMembersAsync(key)).Select(r => r.ToString()));
+        public ValueTask<IEnumerable<string>> GetSetValueAsync(string key) =>
+            WithDatabase(async (db) => (await db.SetMembersAsync(key)).Select(r => r.ToString()));
 
-        public async ValueTask<string> GetKeyTypeAsync(string key) =>
-            await WithDatabase(async (db) => (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant());
+        public ValueTask<string> GetKeyTypeAsync(string key) =>
+            WithDatabase(async (db) => (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant());
 
-        public async ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key) =>
-            await WithDatabase(async (db) => (await db.HashGetAllAsync(key)).Select(r => new HashCollectionEntry(r)));
+        public ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key) =>
+            WithDatabase(async (db) => (await db.HashGetAllAsync(key)).Select(r => new HashCollectionEntry(r)));
 
-        public async ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
-            await WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
+        public ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
+            WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
 
         public void Dispose()
         {
