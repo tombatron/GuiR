@@ -6,9 +6,10 @@ namespace GuiR.Controls.KeyDisplay
 {
     public partial class StringKey : UserControl
     {
-        public StringKey(string key)
+        public StringKey(string key) : this(key, ServiceLocator.GetService<StringKeyViewModel>()) { }
+
+        public StringKey(string key, StringKeyViewModel viewModel)
         {
-            var viewModel = ServiceLocator.GetService<StringKeyViewModel>();
             viewModel.Key = key;
 
             DataContext = viewModel;

@@ -105,6 +105,7 @@
     <Compile Include="Controls\KeyDisplay\HashKey.xaml.cs">
       <DependentUpon>HashKey.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyDisplay\HyperLogLogKey.cs" />
     <Compile Include="Controls\KeyDisplay\KeyDisplayContainer.xaml.cs">
       <DependentUpon>KeyDisplayContainer.xaml</DependentUpon>
     </Compile>
