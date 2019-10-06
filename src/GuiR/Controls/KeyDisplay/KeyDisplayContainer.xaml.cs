@@ -44,7 +44,7 @@ namespace GuiR.Controls.KeyDisplay
             {
                 var keyType = await _redis.GetKeyTypeAsync(CurrentKey);
 
-                switch(keyType)
+                switch (keyType)
                 {
                     case RedisTypes.StringType:
                         KeyContent.Content = new StringKey(CurrentKey);
@@ -60,6 +60,9 @@ namespace GuiR.Controls.KeyDisplay
                         break;
                     case RedisTypes.SortedSetType:
                         KeyContent.Content = new SortedSetKey(CurrentKey);
+                        break;
+                    case RedisTypes.HyperLogLog:
+                        KeyContent.Content = new HyperLogLogKey(CurrentKey);
                         break;
                     default:
                         KeyContent.Content = null;
