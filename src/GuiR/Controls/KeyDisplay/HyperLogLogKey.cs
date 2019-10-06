@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GuiR.Configuration;
+using GuiR.ViewModels.Keys.KeyDisplay;
 
 namespace GuiR.Controls.KeyDisplay
 {
-    class HyperLogLogKey
+    public class HyperLogLogKey : StringKey
     {
+        public HyperLogLogKey(string key) : base(key, ServiceLocator.GetService<HyperLogLogKeyViewModel>()) { }
     }
 }
