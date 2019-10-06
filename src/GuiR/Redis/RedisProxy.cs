@@ -69,7 +69,28 @@ namespace GuiR.Redis
             WithDatabase(async (db) => (await db.SetMembersAsync(key)).Select(r => r.ToString()));
 
         public ValueTask<string> GetKeyTypeAsync(string key) =>
-            WithDatabase(async (db) => (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant());
+            WithDatabase(async (db) => 
+            {
+                var keyType = (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant();
+
+                if (keyType == RedisTypes.StringType)
+                {
+                    var stringPrefix = await db.StringGetRangeAsync(key, 0, 3);
+
+                    if (stringPrefix == "HYLL")
+                    {
+                        return RedisTypes.HyperLogLog;
+                    }
+                    else
+                    {
+                        return RedisTypes.StringType;
+                    }
+                }
+                else
+                {
+                    return keyType;
+                }
+            });
 
         public ValueTask<IEnumerable<HashCollectionEntry>> GetHashAsync(string key) =>
             WithDatabase(async (db) => (await db.HashGetAllAsync(key)).Select(r => new HashCollectionEntry(r)));
