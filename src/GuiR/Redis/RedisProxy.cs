@@ -77,11 +77,11 @@ namespace GuiR.Redis
         public ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
             WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
 
-        public ValueTask<string[]> GetGeoHashSetAsync(string key) =>
+        public ValueTask<IEnumerable<string>> GetGeoHashSetAsync(string key) =>
             WithDatabase(async (db) => 
             {
                 var geoMembers = await db.SortedSetRangeByRankAsync(key);
-                return  await db.GeoHashAsync(key, geoMembers);
+                return  (IEnumerable<string>)await db.GeoHashAsync(key, geoMembers);
             });
 
         private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
