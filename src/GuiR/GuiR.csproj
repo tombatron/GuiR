@@ -102,7 +102,6 @@
     <Compile Include="Configuration\Modules\RedisModule.cs" />
     <Compile Include="Configuration\Modules\SettingsModule.cs" />
     <Compile Include="Configuration\Modules\ViewModelModule.cs" />
-    <Compile Include="Controls\KeyDisplay\GeoKey.cs" />
     <Compile Include="Controls\KeyDisplay\HashKey.xaml.cs">
       <DependentUpon>HashKey.xaml</DependentUpon>
     </Compile>
@@ -135,7 +134,6 @@
     <Compile Include="Settings\ISettingsProvider.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\GeoKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\HashKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\HyperLogLogKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />

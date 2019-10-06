@@ -19,7 +19,6 @@ namespace GuiR.Configuration.Modules
             builder.RegisterType<HashKeyViewModel>();
             builder.RegisterType<SetKeyViewModel>();
             builder.RegisterType<SortedSetKeyViewModel>();
-            builder.RegisterType<GeoKeyViewModel>();
             builder.RegisterType<HyperLogLogKeyViewModel>();
         }
     }
