@@ -29,7 +29,7 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
-                KeyValue = await GetDataAsync(Key); //_redis.GetListValueAsync(Key);
+                KeyValue = await GetDataAsync(Key);
             });
 
         protected virtual ValueTask<IEnumerable<string>> GetDataAsync(string key) =>

@@ -1,4 +1,5 @@
 ﻿using GuiR.Redis;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys.KeyDisplay
@@ -27,7 +28,10 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
-                KeyValue = await _redis.GetStringValueAsync(Key);
+                KeyValue = await GetDataAsync(Key);
             });
+
+        protected virtual ValueTask<string> GetDataAsync(string key) =>
+            _redis.GetStringValueAsync(key);
     }
 }

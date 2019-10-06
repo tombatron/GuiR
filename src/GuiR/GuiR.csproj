@@ -134,6 +134,7 @@
     <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\GeoKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\HashKeyViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeyDisplay\HyperLogLogKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\SetKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\SortedSetKeyViewModel.cs" />
