@@ -101,8 +101,11 @@ namespace GuiR.Redis
         public ValueTask<IEnumerable<string>> GetGeoHashSetAsync(string key) =>
             WithDatabase(async (db) =>
             {
-                var geoMembers = await db.SortedSetRangeByRankAsync(key);
-                return (IEnumerable<string>)await db.GeoHashAsync(key, geoMembers);
+                var members = await db.SortedSetRangeByRankAsync(key);
+
+                db.GeoPositionAsync(key, members);
+
+                return (IEnumerable<string>)await db.GeoHashAsync(key, members);
             });
 
         public ValueTask<long> GetHyperLogLogCountAsync(string key) =>

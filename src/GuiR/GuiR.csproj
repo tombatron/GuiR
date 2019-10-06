@@ -123,6 +123,7 @@
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
+    <Compile Include="Models\GeoPositionCollectionEntry.cs" />
     <Compile Include="Models\HashCollectionEntry.cs" />
     <Compile Include="Models\SortedSetCollectionEntry.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
