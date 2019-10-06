@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using GuiR.Configuration;
+using GuiR.ViewModels.Keys.KeyDisplay.SortedSet;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GuiR.Controls.KeyDisplay.SortedSet
 {
-    /// <summary>
-    /// Interaction logic for Geo.xaml
-    /// </summary>
     public partial class Geo : UserControl
     {
-        public Geo()
+        public Geo(string key)
         {
+            var viewModel = ServiceLocator.GetService<GeoViewModel>();
+            viewModel.Key = key;
+
+            DataContext = viewModel;
+
             InitializeComponent();
         }
     }

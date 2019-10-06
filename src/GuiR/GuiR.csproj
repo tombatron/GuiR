@@ -144,8 +144,8 @@
     <Compile Include="ViewModels\Keys\KeyDisplay\HyperLogLogKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\SetKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\SortedSetKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\SortedSet\DefaultViewModel.cs" />
+    <Compile Include="ViewModels\Keys\KeyDisplay\SortedSet\GeoViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeyDisplay\StringKeyViewModel.cs" />
     <Compile Include="ViewModels\Keys\KeysControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindow.cs" />
