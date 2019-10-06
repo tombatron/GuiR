@@ -9,9 +9,11 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
         {
         }
 
-        protected override ValueTask<string> GetDataAsync(string key)
+        protected override async ValueTask<string> GetDataAsync(string key)
         {
-            return base.GetDataAsync(key);
+            var count = await _redis.GetHyperLogLogCountAsync(key);
+
+            return count.ToString();
         }
     }
 }

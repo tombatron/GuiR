@@ -6,7 +6,7 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 {
     public class StringKeyViewModel : ViewModelBase
     {
-        private readonly RedisProxy _redis;
+        protected readonly RedisProxy _redis;
 
         public StringKeyViewModel(RedisProxy redis) => _redis = redis;
 
