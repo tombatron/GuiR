@@ -13,24 +13,22 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 
         public string Key { get; set; }
 
-        private IEnumerable<SortedSetCollectionEntry> _keyValue;
 
-        public IEnumerable<SortedSetCollectionEntry> KeyValue
+
+        private bool _isGeoData;
+
+        public bool IsGeoData
         {
-            get => _keyValue;
+            get => _isGeoData;
 
             set
             {
-                _keyValue = value;
+                _isGeoData = value;
 
-                RaisePropertyChangedEvent(nameof(KeyValue));
+                RaisePropertyChangedEvent(nameof(IsGeoData));
             }
         }
 
-        public ICommand LoadKeyValue =>
-            new DelegateCommand(async () =>
-            {
-                KeyValue = await _redis.GetSortedSetAsync(Key);
-            });
+
     }
 }
