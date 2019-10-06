@@ -15,7 +15,14 @@
     </Behaviors:Interaction.Triggers>
 
     <Grid>
-        <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <CheckBox Margin="10, 10" IsChecked="{Binding IsGeoValue, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0">Is Geo data?</CheckBox>
+
+        <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5" Grid.Row="1">
             <DataGrid x:Name="SortedSetItems" ItemsSource="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" />
         </ScrollViewer>            
     </Grid>
