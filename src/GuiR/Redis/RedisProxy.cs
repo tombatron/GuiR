@@ -19,7 +19,7 @@ namespace GuiR.Redis
         public RedisProxy(IServerContext serverContext) => _serverContext = serverContext;
 
         public ValueTask<string> GetInfoAsync() =>
-            WithServer(async (server) => 
+            WithServer(async (server) =>
             {
                 var infoResult = await server.InfoAsync();
 
@@ -29,7 +29,7 @@ namespace GuiR.Redis
                 {
                     result.AppendLine(grouping.Key);
 
-                    foreach(var item in grouping)
+                    foreach (var item in grouping)
                     {
                         result.AppendLine($"{item.Key} | {item.Value} ");
                     }
@@ -39,7 +39,7 @@ namespace GuiR.Redis
             });
 
         public ValueTask<string> GetSlowLogAsync() =>
-            WithServer<string>(async (server) => 
+            WithServer<string>(async (server) =>
             {
                 var slowLogResult = await server.SlowlogGetAsync();
 
@@ -47,7 +47,7 @@ namespace GuiR.Redis
             });
 
         public ValueTask<List<string>> GetKeysAsync(string filter) =>
-            WithServer((server) => 
+            WithServer((server) =>
             {
                 var result = new List<string>();
 
@@ -69,7 +69,7 @@ namespace GuiR.Redis
             WithDatabase(async (db) => (await db.SetMembersAsync(key)).Select(r => r.ToString()));
 
         public ValueTask<string> GetKeyTypeAsync(string key) =>
-            WithDatabase(async (db) => 
+            WithDatabase(async (db) =>
             {
                 var keyType = (await db.KeyTypeAsync(key)).ToString().ToLowerInvariant();
 
@@ -99,10 +99,16 @@ namespace GuiR.Redis
             WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
 
         public ValueTask<IEnumerable<string>> GetGeoHashSetAsync(string key) =>
-            WithDatabase(async (db) => 
+            WithDatabase(async (db) =>
             {
                 var geoMembers = await db.SortedSetRangeByRankAsync(key);
-                return  (IEnumerable<string>)await db.GeoHashAsync(key, geoMembers);
+                return (IEnumerable<string>)await db.GeoHashAsync(key, geoMembers);
+            });
+
+        public ValueTask<long> GetHyperLogLogCountAsync(string key) =>
+            WithDatabase(async (db) =>
+            {
+                return await db.HyperLogLogLengthAsync(key);
             });
 
         private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
