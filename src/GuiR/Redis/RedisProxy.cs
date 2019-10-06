@@ -98,14 +98,16 @@ namespace GuiR.Redis
         public ValueTask<IEnumerable<SortedSetCollectionEntry>> GetSortedSetAsync(string key) =>
             WithDatabase(async (db) => (await db.SortedSetRangeByScoreWithScoresAsync(key)).Select(r => new SortedSetCollectionEntry(r)));
 
-        public ValueTask<IEnumerable<string>> GetGeoHashSetAsync(string key) =>
+        public ValueTask<IEnumerable<GeoPositionCollectionEntry>> GetGeoHashSetAsync(string key) =>
             WithDatabase(async (db) =>
             {
                 var members = await db.SortedSetRangeByRankAsync(key);
 
-                db.GeoPositionAsync(key, members);
+                var positions = await db.GeoPositionAsync(key, members);
 
-                return (IEnumerable<string>)await db.GeoHashAsync(key, members);
+                var zippedMemberPositions = Enumerable.Zip(members.Select(x => x.ToString()), positions.Select(x => x.Value), (string member, GeoPosition position) => (member, position));
+
+                return zippedMemberPositions.Select(x => new GeoPositionCollectionEntry(x.member, x.position));
             });
 
         public ValueTask<long> GetHyperLogLogCountAsync(string key) =>
