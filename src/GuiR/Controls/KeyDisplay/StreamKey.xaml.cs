@@ -1,11 +1,12 @@
 ﻿using GuiR.Configuration;
+using GuiR.ViewModels.Keys.KeyDisplay;
 using System.Windows.Controls;
 
 namespace GuiR.Controls.KeyDisplay
 {
     public partial class StreamKey : UserControl
     {
-        public StreamKey(string key) : this(key, ServiceLocator.GetService<StreamKeyViewModel>())
+        public StreamKey(string key) : this(key, ServiceLocator.GetService<StreamKeyViewModel>()) { }
         public StreamKey(string key, StreamKeyViewModel viewModel)
         {
             viewModel.Key = key;

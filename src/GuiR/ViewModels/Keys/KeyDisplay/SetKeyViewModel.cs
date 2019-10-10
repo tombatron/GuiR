@@ -12,6 +12,5 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 
         protected override ValueTask<IEnumerable<string>> GetDataAsync(string key) =>
             _redis.GetSetValueAsync(key);
-
     }
 }
