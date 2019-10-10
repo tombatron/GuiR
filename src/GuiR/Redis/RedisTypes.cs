@@ -8,5 +8,6 @@
         public const string SetType = "set";
         public const string SortedSetType = "sortedset";
         public const string HyperLogLog = "hyperloglog";
+        public const string Stream = "stream";
     }
 }
