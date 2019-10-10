@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="GuiR.Controls.KeyDisplay.StreamKey"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GuiR.Controls.KeyDisplay"
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Behaviors:Interaction.Triggers>
+        <Behaviors:EventTrigger EventName="Loaded">
+            <Behaviors:InvokeCommandAction Command="{Binding LoadKeyValue}" />
+        </Behaviors:EventTrigger>
+    </Behaviors:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <WrapPanel Grid.Row="0">
+            <Button>Previous</Button>
+            <Button>Next</Button>
+        </WrapPanel>
+
+        <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5" Grid.Row="1">
+            <ListView x:Name="ListItems" ItemsSource="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}">
+                <DataTemplate>
+                    <StackPanel>
+                        <Label>Stream Item ID:</Label>
+                        <Label Content="{Binding Id}"></Label>
+
+                        <DataGrid ItemsSource="{Binding Value}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" />
+                                <DataGridTextColumn Header="Value" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

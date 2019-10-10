@@ -122,6 +122,9 @@
     <Compile Include="Controls\KeyDisplay\SortedSet\Geo.xaml.cs">
       <DependentUpon>Geo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyDisplay\StreamKey.xaml.cs">
+      <DependentUpon>StreamKey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
       <DependentUpon>StringKey.xaml</DependentUpon>
     </Compile>
@@ -181,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\KeyDisplay\SortedSet\Geo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\KeyDisplay\StreamKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
