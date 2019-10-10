@@ -21,6 +21,7 @@ namespace GuiR.Configuration.Modules
             builder.RegisterType<ViewModels.Keys.KeyDisplay.SortedSet.DefaultViewModel>();
             builder.RegisterType<ViewModels.Keys.KeyDisplay.SortedSet.GeoViewModel>();
             builder.RegisterType<HyperLogLogKeyViewModel>();
+            builder.RegisterType<StreamKeyViewModel>();
         }
     }
 }
