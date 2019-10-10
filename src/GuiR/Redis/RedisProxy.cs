@@ -116,6 +116,23 @@ namespace GuiR.Redis
                 return await db.HyperLogLogLengthAsync(key);
             });
 
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key) =>
+            WithDatabase(async (db) =>
+            {
+                var entries = await db.StreamRangeAsync(key, count: 50);
+
+                return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
+            });
+
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key, string fromId) =>
+            WithDatabase(async (db) =>
+            {
+                var entries = await db.StreamRangeAsync(key, minId: fromId, count: 50);
+
+                return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
+            });
+
+
         private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
         {
             if (_muxrs.TryGetValue(serverInfo, out var existingMuxr))
