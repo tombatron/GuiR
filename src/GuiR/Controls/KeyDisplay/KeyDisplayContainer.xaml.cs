@@ -64,6 +64,9 @@ namespace GuiR.Controls.KeyDisplay
                     case RedisTypes.HyperLogLog:
                         KeyContent.Content = new HyperLogLogKey(CurrentKey);
                         break;
+                    case RedisTypes.Stream:
+                        KeyContent.Content = new StreamKey(CurrentKey);
+                        break;
                     default:
                         KeyContent.Content = null;
                         break;
