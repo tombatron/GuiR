@@ -42,9 +42,8 @@
                 <ColumnDefinition Width="5*" />
             </Grid.ColumnDefinitions>
 
-            <Button Width="60" Grid.Column="0">Previous</Button>
-            <Button Width="60" Grid.Column="1">Next</Button>
+            <Button Width="60" Grid.Column="0" Command="{Binding PreviousPage}">Previous</Button>
+            <Button Width="60" Grid.Column="1" Command="{Binding NextPage}">Next</Button>
         </Grid>
-              
     </Grid>
 </UserControl>

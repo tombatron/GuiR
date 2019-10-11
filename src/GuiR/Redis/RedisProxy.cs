@@ -124,10 +124,10 @@ namespace GuiR.Redis
                 return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
             });
 
-        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key, string fromId) =>
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key, string minId = null, string maxId = null) =>
             WithDatabase(async (db) =>
             {
-                var entries = await db.StreamRangeAsync(key, minId: fromId, count: 50);
+                var entries = await db.StreamRangeAsync(key, minId: minId, maxId: maxId, count: 50);
 
                 return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
             });

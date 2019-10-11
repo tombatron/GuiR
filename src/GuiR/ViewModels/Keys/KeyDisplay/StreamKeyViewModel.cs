@@ -1,6 +1,7 @@
 ﻿using GuiR.Models;
 using GuiR.Redis;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -31,6 +32,18 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             new DelegateCommand(async () =>
             {
                 KeyValue = await GetDataAsync(Key);
+            });
+
+        public ICommand NextPage =>
+            new DelegateCommand(() => 
+            {
+                Debug.WriteLine("NextPage");
+            });
+
+        public ICommand PreviousPage =>
+            new DelegateCommand(() => 
+            {
+                Debug.WriteLine("PreviousPage");
             });
 
         protected virtual ValueTask<IEnumerable<StreamCollectionEntry>> GetDataAsync(string key) =>
