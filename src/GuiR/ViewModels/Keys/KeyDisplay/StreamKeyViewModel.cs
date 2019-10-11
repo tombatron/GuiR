@@ -1,7 +1,7 @@
 ﻿using GuiR.Models;
 using GuiR.Redis;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -28,6 +28,9 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             }
         }
 
+        private string _minKeyId;
+        private string _maxKeyId;
+
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
@@ -35,18 +38,26 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             });
 
         public ICommand NextPage =>
-            new DelegateCommand(() => 
+            new DelegateCommand(async () => 
             {
-                Debug.WriteLine("NextPage");
+                KeyValue = await GetDataAsync(Key, minId: _maxKeyId);
             });
 
         public ICommand PreviousPage =>
-            new DelegateCommand(() => 
+            new DelegateCommand(async () => 
             {
-                Debug.WriteLine("PreviousPage");
+                KeyValue = await GetDataAsync(Key, maxId: _minKeyId);
             });
 
-        protected virtual ValueTask<IEnumerable<StreamCollectionEntry>> GetDataAsync(string key) =>
-            _redis.GetStreamDataAsync(key);
+        protected virtual async ValueTask<IEnumerable<StreamCollectionEntry>> GetDataAsync(string key, string minId = null, string maxId = null)
+        {
+            var page = await _redis.GetStreamDataAsync(key, minId: minId, maxId: maxId);
+
+            _minKeyId = page.Min(x => x.Id);
+            _maxKeyId = page.Max(x => x.Id);
+
+            return page;
+        }
+            
     }
 }
