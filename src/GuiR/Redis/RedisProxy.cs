@@ -119,7 +119,7 @@ namespace GuiR.Redis
         public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key) =>
             WithDatabase(async (db) =>
             {
-                var entries = await db.StreamRangeAsync(key, count: 3);
+                var entries = await db.StreamRangeAsync(key);
 
                 return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
             });

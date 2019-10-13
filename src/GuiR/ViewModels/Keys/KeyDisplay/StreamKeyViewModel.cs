@@ -15,8 +15,8 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
 
         public string Key { get; set; }
 
-        private IEnumerable<StreamCollectionEntry> _keyValue;
-        public IEnumerable<StreamCollectionEntry> KeyValue
+        private List<StreamCollectionEntry> _keyValue;
+        public List<StreamCollectionEntry> KeyValue
         {
             get => _keyValue;
 
@@ -28,36 +28,17 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
             }
         }
 
-        private string _minKeyId;
-        private string _maxKeyId;
-
         public ICommand LoadKeyValue =>
             new DelegateCommand(async () =>
             {
                 KeyValue = await GetDataAsync(Key);
             });
 
-        public ICommand NextPage =>
-            new DelegateCommand(async () => 
-            {
-                KeyValue = await GetDataAsync(Key, minId: _maxKeyId);
-            });
-
-        public ICommand PreviousPage =>
-            new DelegateCommand(async () => 
-            {
-                KeyValue = await GetDataAsync(Key, maxId: _minKeyId);
-            });
-
-        protected virtual async ValueTask<IEnumerable<StreamCollectionEntry>> GetDataAsync(string key, string minId = null, string maxId = null)
+        protected virtual async ValueTask<List<StreamCollectionEntry>> GetDataAsync(string key, string minId = null)
         {
-            var page = await _redis.GetStreamDataAsync(key, minId: minId, maxId: maxId);
+            var page = await _redis.GetStreamDataAsync(key);
 
-            _minKeyId = page.Min(x => x.Id);
-            _maxKeyId = page.Max(x => x.Id);
-
-            return page;
+            return page.ToList();
         }
-            
     }
 }
