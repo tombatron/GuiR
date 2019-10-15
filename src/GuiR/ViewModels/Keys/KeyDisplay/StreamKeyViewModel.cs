@@ -34,6 +34,18 @@ namespace GuiR.ViewModels.Keys.KeyDisplay
                 KeyValue = await GetDataAsync(Key);
             });
 
+        public ICommand Next =>
+            new DelegateCommand(async () => 
+            {
+                KeyValue = await GetDataAsync(Key);
+            });
+
+        public ICommand Previous =>
+            new DelegateCommand(async () =>
+            {
+                KeyValue = await GetDataAsync(Key);
+            });
+
         protected virtual async ValueTask<List<StreamCollectionEntry>> GetDataAsync(string key, string minId = null)
         {
             var page = await _redis.GetStreamDataAsync(key);

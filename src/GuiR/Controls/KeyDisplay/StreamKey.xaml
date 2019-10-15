@@ -14,6 +14,11 @@
     </Behaviors:Interaction.Triggers>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
         <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5" Grid.Row="0">
             <ListView x:Name="ListItems" ItemsSource="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemTemplate>
@@ -30,5 +35,15 @@
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button Height="30" Width="80" Grid.Column="0" Command="{Binding Previous}">Previous</Button>
+            <Button Height="30" Width="80" Grid.Column="1" Command="{Binding Next}">Next</Button>
+        </Grid>
     </Grid>
 </UserControl>
