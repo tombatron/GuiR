@@ -116,26 +116,29 @@ namespace GuiR.Redis
                 return await db.HyperLogLogLengthAsync(key);
             });
 
-        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key) =>
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key, int count = 5) =>
             WithDatabase(async (db) =>
             {
-                var entries = await db.StreamRangeAsync(key);
+                var entries = await db.StreamRangeAsync(key, count: count);
 
                 return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
             });
 
-        public ValueTask<IEnumerable<StreamCollectionEntry>> GetStreamDataAsync(string key, string minId = null, string maxId = null) =>
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetNextStreamDataAsync(string key, string minId, int count = 5) =>
             WithDatabase(async (db) =>
             {
-
-                RedisValue? minRedisValue = minId == null ? default(RedisValue?): (RedisValue)minId;
-                RedisValue? maxRedisValue = maxId == null ? default(RedisValue?) : (RedisValue)maxId;
-
-                var entries = await db.StreamRangeAsync(key, minId: minRedisValue, maxId: maxRedisValue, count: 3);
+                var entries = await db.StreamRangeAsync(key, minId: minId, count: count);
 
                 return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x));
             });
 
+        public ValueTask<IEnumerable<StreamCollectionEntry>> GetPreviousStreamDataAsync(string key, string maxId, int count = 5) =>
+            WithDatabase(async (db) =>
+            {
+                var entries = await db.StreamRangeAsync(key, maxId: maxId, messageOrder: Order.Descending, count: count);
+
+                return entries.Where(x => !x.IsNull).Select(x => new StreamCollectionEntry(x)).OrderBy(x => x.Id).Select(x => x);
+            });
 
         private async ValueTask<ConnectionMultiplexer> GetConnectionMultiplexerAsync(RedisServerInformation serverInfo)
         {
