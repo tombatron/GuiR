@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GuiR.Redis
@@ -18,24 +17,10 @@ namespace GuiR.Redis
 
         public RedisProxy(IServerContext serverContext) => _serverContext = serverContext;
 
-        public ValueTask<string> GetInfoAsync() =>
+        public ValueTask<IGrouping<string, KeyValuePair<string, string>>[]> GetInfoAsync() =>
             WithServer(async (server) =>
             {
-                var infoResult = await server.InfoAsync();
-
-                var result = new StringBuilder(2000);
-
-                foreach (var grouping in infoResult)
-                {
-                    result.AppendLine(grouping.Key);
-
-                    foreach (var item in grouping)
-                    {
-                        result.AppendLine($"{item.Key} | {item.Value} ");
-                    }
-                }
-
-                return result.ToString();
+                return await server.InfoAsync();
             });
 
         public ValueTask<string> GetSlowLogAsync() =>

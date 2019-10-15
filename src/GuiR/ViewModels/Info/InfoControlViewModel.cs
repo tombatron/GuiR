@@ -1,5 +1,6 @@
-﻿using GuiR.Models;
-using GuiR.Redis;
+﻿using GuiR.Redis;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GuiR.ViewModels.Info
@@ -10,8 +11,8 @@ namespace GuiR.ViewModels.Info
 
         public InfoControlViewModel(RedisProxy redis) => _redis = redis;
 
-        private string _info;
-        public string Info
+        private IGrouping<string, KeyValuePair<string, string>>[] _info;
+        public IGrouping<string, KeyValuePair<string, string>>[] Info
         {
             get => _info;
 
@@ -23,7 +24,7 @@ namespace GuiR.ViewModels.Info
             }
         }
 
-        public async ValueTask<string> LoadAsync() =>
+        public async ValueTask<IGrouping<string, KeyValuePair<string, string>>[]> LoadAsync() =>
             Info = await _redis.GetInfoAsync();
     }
 }

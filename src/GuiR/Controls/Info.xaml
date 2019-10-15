@@ -1,15 +1,26 @@
 ﻿<UserControl x:Class="GuiR.Controls.Info"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GuiR.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Initialized="UserControl_Initialized">
     <Grid>
         <ScrollViewer>
-            <TextBlock Text="{Binding Info, UpdateSourceTrigger=PropertyChanged}" />
-        </ScrollViewer>            
+            <ListView x:Name="ListItems" ItemsSource="{Binding Info, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <WrapPanel>
+                                <Label Content="{Binding Key}"></Label>
+                            </WrapPanel>
+
+                            <DataGrid ItemsSource="{Binding BindsDirectlyToSource=True}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
     </Grid>
 </UserControl>
