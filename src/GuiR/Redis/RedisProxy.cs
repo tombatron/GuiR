@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GuiR.Redis
 {
@@ -143,19 +144,37 @@ namespace GuiR.Redis
 
         private async ValueTask<TResult> WithDatabase<TResult>(Func<IDatabase, Task<TResult>> databaseAction)
         {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var database = muxr.GetDatabase(_serverContext.DatabaseId);
+            try
+            {
+                var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+                var database = muxr.GetDatabase(_serverContext.DatabaseId);
 
-            return await databaseAction(database);
+                return await databaseAction(database);
+            }
+            catch (RedisConnectionException ex)
+            {
+                MessageBox.Show($"Error connecting to Redis. Exception: {ex.Message}");
+
+                return default;
+            }
         }
 
         private async ValueTask<TResult> WithServer<TResult>(Func<IServer, Task<TResult>> serverAction)
         {
-            var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
-            var firstEndpoint = muxr.GetEndPoints()[0];
-            var server = muxr.GetServer(firstEndpoint);
+            try
+            {
+                var muxr = await GetConnectionMultiplexerAsync(_serverContext.ServerInfo);
+                var firstEndpoint = muxr.GetEndPoints()[0];
+                var server = muxr.GetServer(firstEndpoint);
 
-            return await serverAction(server);
+                return await serverAction(server);
+            }
+            catch (RedisConnectionException ex)
+            {
+                MessageBox.Show($"Error connecting to Redis. Exception: {ex.Message}");
+
+                return default;
+            }
         }
 
         public void Dispose()
