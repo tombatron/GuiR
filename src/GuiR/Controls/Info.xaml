@@ -8,7 +8,7 @@
              Initialized="UserControl_Initialized">
     <Grid>
         <ScrollViewer>
-            <ListView x:Name="ListItems" ItemsSource="{Binding Info, UpdateSourceTrigger=PropertyChanged}">
+            <ListView x:Name="ListItems" ItemsSource="{Binding Info, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
