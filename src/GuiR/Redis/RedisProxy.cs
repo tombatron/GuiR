@@ -32,17 +32,12 @@ namespace GuiR.Redis
                 return default;
             });
 
-        public ValueTask<List<string>> GetKeysAsync(string filter) =>
+        public ValueTask<IEnumerable<string>> GetKeysAsync(string filter) =>
             WithServer((server) =>
             {
-                var result = new List<string>();
+                var keys = server.Keys(_serverContext.DatabaseId, pattern: filter);
 
-                foreach (var key in server.Keys(_serverContext.DatabaseId, pattern: filter))
-                {
-                    result.Add(key);
-                }
-
-                return Task.FromResult(result);
+                return Task.FromResult(keys.Select(x => x.ToString()));
             });
 
         public ValueTask<string> GetStringValueAsync(string key) =>
@@ -134,7 +129,7 @@ namespace GuiR.Redis
             }
             else
             {
-                var muxr = await ConnectionMultiplexer.ConnectAsync(serverInfo);
+                 var muxr = await ConnectionMultiplexer.ConnectAsync(serverInfo);
 
                 _muxrs.TryAdd(serverInfo, muxr);
 

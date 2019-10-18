@@ -56,7 +56,18 @@
             <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}">Refresh</Button>
         </Grid>
 
-        <ListBox Grid.Column="0" Grid.Row="1" Height="Auto" Margin="9,10,10,10" ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding ElementName=KeyContent, Path=CurrentKey}"  />
+        <ListBox 
+            Grid.Column="0" 
+            Grid.Row="1" 
+            Height="Auto" 
+            Margin="9,10,10,10" 
+            
+            ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}"
+            
+            SelectedItem="{Binding ElementName=KeyContent, Path=CurrentKey}"
+            
+            VirtualizingStackPanel.IsVirtualizing="True"
+            />
 
         <keydisplay:KeyDisplayContainer x:Name="KeyContent" Grid.Row="1" Grid.Column="1" />
     </Grid>

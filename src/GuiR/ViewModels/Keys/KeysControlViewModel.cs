@@ -1,5 +1,7 @@
-﻿using GuiR.Redis;
+﻿using GuiR.Models;
+using GuiR.Redis;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
@@ -37,9 +39,9 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        private List<string> _keysList = new List<string>();
+        private IEnumerable<string> _keysList;
 
-        public List<string> KeysList
+        public IEnumerable<string> KeysList
         {
             get => _keysList;
 
