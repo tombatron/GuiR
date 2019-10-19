@@ -1,4 +1,5 @@
 ﻿using GuiR.Models;
+using GuiR.Models.Virtualization;
 using GuiR.Redis;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,9 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        private IEnumerable<string> _keysList;
+        private VirtualizingCollection<string> _keysList;
 
-        public IEnumerable<string> KeysList
+        public VirtualizingCollection<string> KeysList
         {
             get => _keysList;
 
@@ -62,7 +63,10 @@ namespace GuiR.ViewModels.Keys
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
-                KeysList = await _redis.GetKeysAsync(KeyFilter);
+                var keys = await _redis.GetKeysAsync(KeyFilter);
+                var keysSource = new KeyItemsProvider(keys);
+
+                KeysList = new VirtualizingCollection<string>(keysSource);
             });
     }
 }

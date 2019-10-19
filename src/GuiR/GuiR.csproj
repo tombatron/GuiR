@@ -137,6 +137,7 @@
     <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
     <Compile Include="Models\GeoPositionCollectionEntry.cs" />
     <Compile Include="Models\HashCollectionEntry.cs" />
+    <Compile Include="Models\KeyItemsProvider.cs" />
     <Compile Include="Models\NameValueCollectionEntry.cs" />
     <Compile Include="Models\SortedSetCollectionEntry.cs" />
     <Compile Include="Models\StreamCollectionEntry.cs" />
