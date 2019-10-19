@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GuiR.Models
 {
-    public class FileSystemBackKeyCollection : IList<string>, IDisposable
+    public class FileSystemBackedKeyCollection : IList<string>, IDisposable
     {
         private readonly IEnumerable<string> _baseKeyEnumeration;
         private readonly string _filePath;
@@ -17,7 +18,7 @@ namespace GuiR.Models
         private StreamReader _reader;
         private StreamWriter _writer;
 
-        public FileSystemBackKeyCollection(IEnumerable<string> baseKeyEnumeration)
+        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
         {
             _baseKeyEnumeration = baseKeyEnumeration;
             _filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -27,6 +28,8 @@ namespace GuiR.Models
 
             PopulateFileSystem();
         }
+
+        public IList<string> FetchRange(int startIndex, int count) => InternalEnumerable().Skip(startIndex).Take(count).ToList();
 
         private void PopulateFileSystem()
         {
