@@ -1,0 +1,5 @@
+﻿The "Virtualing Collection" code found in this namespace was found
+on CodeProject and written by Paul McClean. 
+
+https://www.codeproject.com/script/Membership/View.aspx?mid=1402727
+https://www.codeproject.com/Articles/34405/WPF-Data-Virtualization

@@ -278,6 +278,9 @@
   <ItemGroup>
     <Resource Include="redis_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Models\Virtualization\Attribution.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterResolveReferences">
     <ItemGroup>
