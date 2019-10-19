@@ -11,6 +11,8 @@ namespace GuiR.ViewModels.Keys
         private readonly RedisProxy _redis;
         private readonly IServerContext _serverContext;
 
+        private FileSystemBackedKeyCollection _keyCollection;
+
         private int _databaseId = 0;
         public int DatabaseId
         {
@@ -62,13 +64,18 @@ namespace GuiR.ViewModels.Keys
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
-                var keys = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
+                _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
 
-                await Task.Delay(1_000);
+                await Task.Delay(500);
 
-                var keysSource = new KeyItemsProvider(keys);
+                var keysSource = new KeyItemsProvider(_keyCollection);
 
                 KeysList = new VirtualizingCollection<string>(keysSource);
+            });
+
+        public ICommand FilterKeys =>
+            new DelegateCommand(async () => 
+            {
             });
     }
 }
