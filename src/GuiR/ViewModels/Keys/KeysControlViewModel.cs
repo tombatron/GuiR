@@ -74,8 +74,11 @@ namespace GuiR.ViewModels.Keys
             });
 
         public ICommand FilterKeys =>
-            new DelegateCommand(async () => 
+            new DelegateCommand(() =>
             {
+                var keysSource = new FilteredKeyItemsProvider(_keyCollection.FilterKeys(KeyFilter));
+
+                KeysList = new VirtualizingCollection<string>(keysSource);
             });
     }
 }

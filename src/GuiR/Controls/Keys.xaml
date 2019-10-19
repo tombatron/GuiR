@@ -34,7 +34,7 @@
             <Label Name="KeyFilterLabel" Grid.Row="0" Grid.Column="0" Margin="10,0">Key Filter</Label>
             <TextBox Name="KeyFilter" HorizontalAlignment="Stretch" Height="20" Width="Auto" Margin="10,0" Grid.Column="0" Grid.Row="1" Text="{Binding KeyFilter, UpdateSourceTrigger=PropertyChanged}" />
 
-            <Button Name="FilterButton" Width="100" Margin="10,0,10,0" Grid.Column="1" Grid.Row="1" Command="">Filter</Button>
+            <Button Name="FilterButton" Width="100" Margin="10,0,10,0" Grid.Column="1" Grid.Row="1" Command="{Binding FilterKeys}">Filter</Button>
 
             <Label Name="DatabaseLabel" Grid.Row="0" Grid.Column="2" Margin="10,0">Database</Label>
             <ComboBox Name="Database" Grid.Row="1" Grid.Column="2" Height="20" Width="50" SelectedIndex="{Binding DatabaseId, UpdateSourceTrigger=PropertyChanged}">

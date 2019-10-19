@@ -12,7 +12,7 @@ namespace GuiR.Models
     {
         private readonly IEnumerable<string> _baseKeyEnumeration;
         private readonly string _filePath;
-        private readonly string _filter;
+        private readonly string _cacheFile;
 
         private CancellationTokenSource _backgroundCancellationTokenSource;
 
@@ -21,17 +21,17 @@ namespace GuiR.Models
         private StreamReader _reader;
         private StreamWriter _writer;
 
-        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration, string filter = default)
+        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
             _baseKeyEnumeration = baseKeyEnumeration;
-            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR", $"{Guid.NewGuid().ToString("N")}.key_data");
-            _writeStream = new FileStream(_filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            _readStream = new FileStream(_filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+
+            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR");
+            _cacheFile = Path.Combine(_filePath, $"{Guid.NewGuid().ToString("N")}.key_data");
+            _writeStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            _readStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
             _reader = new StreamReader(_readStream);
             _writer = new StreamWriter(_writeStream);
-
-            _filter = filter;
 
             PopulateFileSystem();
         }
@@ -39,8 +39,10 @@ namespace GuiR.Models
         public IList<string> FetchRange(int startIndex, int count) =>
             InternalEnumerable().Skip(startIndex).Take(count).ToList();
 
-        public FileSystemBackedKeyCollection FilterKeys(string keyFilter) =>
-            new FileSystemBackedKeyCollection(InternalEnumerable(), keyFilter);
+        public List<string> FilterKeys(string keyFilter) =>
+            InternalEnumerable().Where(x => x.StartsWith(keyFilter)).ToList();
+
+        public bool StillPopulating { get; private set; }
 
         private void PopulateFileSystem()
         {
@@ -48,12 +50,16 @@ namespace GuiR.Models
 
             Task.Run(() =>
             {
+                StillPopulating = true;
+
                 foreach (var key in _baseKeyEnumeration)
                 {
                     _writer.WriteLine(key);
 
                     Count++;
                 }
+
+                StillPopulating = false;
             }, cancelToken);
         }
 
@@ -65,17 +71,7 @@ namespace GuiR.Models
 
             while ((line = _reader.ReadLine()) != null)
             {
-                if (_filter == default)
-                {
-                    yield return line;
-                }
-                else
-                {
-                    if (line.Contains(_filter))
-                    {
-                        yield return line;
-                    }
-                }
+                yield return line;
             }
         }
 
