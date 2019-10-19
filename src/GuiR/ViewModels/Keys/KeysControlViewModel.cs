@@ -1,8 +1,7 @@
 ﻿using GuiR.Models;
 using GuiR.Models.Virtualization;
 using GuiR.Redis;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
@@ -26,7 +25,7 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        private string _keyFilter = "*";
+        private string _keyFilter = "";
 
         public string KeyFilter
         {
@@ -63,7 +62,10 @@ namespace GuiR.ViewModels.Keys
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
-                var keys = await _redis.GetKeysAsync(KeyFilter);
+                var keys = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
+
+                await Task.Delay(1_000);
+
                 var keysSource = new KeyItemsProvider(keys);
 
                 KeysList = new VirtualizingCollection<string>(keysSource);

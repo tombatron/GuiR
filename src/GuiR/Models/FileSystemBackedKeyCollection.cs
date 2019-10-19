@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,17 +14,20 @@ namespace GuiR.Models
         private readonly string _filePath;
         private CancellationTokenSource _backgroundCancellationTokenSource;
 
-        private Stream _fileStream;
+        private Stream _writeStream;
+        private Stream _readStream;
         private StreamReader _reader;
         private StreamWriter _writer;
 
         public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
         {
+            _backgroundCancellationTokenSource = new CancellationTokenSource();
             _baseKeyEnumeration = baseKeyEnumeration;
-            _filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            _fileStream = new FileStream(_filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            _reader = new StreamReader(_fileStream);
-            _writer = new StreamWriter(_fileStream);
+            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR", $"{Guid.NewGuid().ToString("N")}.key_data");
+            _writeStream = new FileStream(_filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            _readStream = new FileStream(_filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+            _reader = new StreamReader(_readStream);
+            _writer = new StreamWriter(_writeStream);
 
             PopulateFileSystem();
         }
@@ -64,7 +67,7 @@ namespace GuiR.Models
 
         public string this[int index]
         {
-            get => throw new NotImplementedException(); //File.ReadLines(_filePath).Skip(index - 1).Take(1).First();
+            get => throw new NotImplementedException();
 
             set => throw new NotImplementedException();
         }
@@ -109,7 +112,8 @@ namespace GuiR.Models
 
             _writer.Dispose();
             _reader.Dispose();
-            _fileStream.Dispose();
+            _writeStream.Dispose();
+            _readStream.Dispose();
 
             // If we're done with the collection lets clean up the file system too.
             File.Delete(_filePath);
