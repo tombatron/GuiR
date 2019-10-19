@@ -12,6 +12,8 @@ namespace GuiR.Models
     {
         private readonly IEnumerable<string> _baseKeyEnumeration;
         private readonly string _filePath;
+        private readonly string _filter;
+
         private CancellationTokenSource _backgroundCancellationTokenSource;
 
         private Stream _writeStream;
@@ -19,7 +21,7 @@ namespace GuiR.Models
         private StreamReader _reader;
         private StreamWriter _writer;
 
-        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
+        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration, string filter = default)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
             _baseKeyEnumeration = baseKeyEnumeration;
@@ -29,10 +31,16 @@ namespace GuiR.Models
             _reader = new StreamReader(_readStream);
             _writer = new StreamWriter(_writeStream);
 
+            _filter = filter;
+
             PopulateFileSystem();
         }
 
-        public IList<string> FetchRange(int startIndex, int count) => InternalEnumerable().Skip(startIndex).Take(count).ToList();
+        public IList<string> FetchRange(int startIndex, int count) =>
+            InternalEnumerable().Skip(startIndex).Take(count).ToList();
+
+        public FileSystemBackedKeyCollection FilterKeys(string keyFilter) =>
+            new FileSystemBackedKeyCollection(InternalEnumerable(), keyFilter);
 
         private void PopulateFileSystem()
         {
@@ -57,10 +65,18 @@ namespace GuiR.Models
 
             while ((line = _reader.ReadLine()) != null)
             {
-                yield return line;
+                if (_filter == default)
+                {
+                    yield return line;
+                }
+                else
+                {
+                    if (line.Contains(_filter))
+                    {
+                        yield return line;
+                    }
+                }
             }
-
-            yield break;
         }
 
         #region IList<string>
