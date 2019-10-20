@@ -21,6 +21,9 @@ namespace GuiR.Models
         private StreamReader _reader;
         private StreamWriter _writer;
 
+        public event EventHandler BackgroundLoadStarted;
+        public event EventHandler BackgroundLoadComplete;
+
         public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
@@ -42,25 +45,37 @@ namespace GuiR.Models
         public List<string> FilterKeys(string keyFilter) =>
             InternalEnumerable().Where(x => x.StartsWith(keyFilter)).ToList();
 
-        public bool StillPopulating { get; private set; }
+        protected virtual void OnBackgroundLoadStarted(EventArgs e)
+        {
+            EventHandler handler = BackgroundLoadStarted;
+
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnBackgroundLoadComplete(EventArgs e)
+        {
+            EventHandler handler = BackgroundLoadComplete;
+
+            handler?.Invoke(this, e);
+        }
 
         private void PopulateFileSystem()
         {
             var cancelToken = _backgroundCancellationTokenSource.Token;
 
+            OnBackgroundLoadStarted(null);
+
             Task.Run(() =>
             {
-                StillPopulating = true;
-
                 foreach (var key in _baseKeyEnumeration)
                 {
                     _writer.WriteLine(key);
 
                     Count++;
                 }
-
-                StillPopulating = false;
             }, cancelToken);
+
+            OnBackgroundLoadComplete(null);
         }
 
         private void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
