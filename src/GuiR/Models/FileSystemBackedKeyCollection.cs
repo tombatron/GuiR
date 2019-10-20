@@ -78,6 +78,8 @@ namespace GuiR.Models
                     Count++;
                 }
 
+                _writer.Flush();
+
                 OnBackgroundLoadComplete(null);
             }, cancelToken);
         }
