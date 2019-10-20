@@ -57,7 +57,8 @@
                 <ComboBoxItem>15</ComboBoxItem>
             </ComboBox>
 
-            <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}">Refresh</Button>
+            <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}" Visibility="{Binding RefreshButtonVisibility, UpdateSourceTrigger=PropertyChanged}">Refresh</Button>
+            <Button Name="CancelButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding CancelRefreshKeys}" Visibility="{Binding CancelButtonVisibility, UpdateSourceTrigger=PropertyChanged}">Cancel</Button>
         </Grid>
 
         <ListBox 

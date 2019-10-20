@@ -35,8 +35,6 @@ namespace GuiR.Models
             _readStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
             _reader = new StreamReader(_readStream);
             _writer = new StreamWriter(_writeStream);
-
-            PopulateFileSystem();
         }
 
         public IList<string> FetchRange(int startIndex, int count) =>
@@ -59,9 +57,10 @@ namespace GuiR.Models
             handler?.Invoke(this, e);
         }
 
-        private void PopulateFileSystem()
+        public void PopulateFileSystem()
         {
             var cancelToken = _backgroundCancellationTokenSource.Token;
+            cancelToken.Register(() => OnBackgroundLoadComplete(null));
 
             OnBackgroundLoadStarted(null);
 
@@ -69,13 +68,18 @@ namespace GuiR.Models
             {
                 foreach (var key in _baseKeyEnumeration)
                 {
+                    if(cancelToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     _writer.WriteLine(key);
 
                     Count++;
                 }
-            }, cancelToken);
 
-            OnBackgroundLoadComplete(null);
+                OnBackgroundLoadComplete(null);
+            }, cancelToken);
         }
 
         private void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
@@ -143,7 +147,7 @@ namespace GuiR.Models
             _readStream.Dispose();
 
             // If we're done with the collection lets clean up the file system too.
-            File.Delete(_filePath);
+            File.Delete(_cacheFile);
         }
 
         #endregion

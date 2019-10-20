@@ -1,17 +1,22 @@
 ﻿using GuiR.Models;
 using GuiR.Models.Virtualization;
 using GuiR.Redis;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
 {
-    public class KeysControlViewModel : ViewModelBase
+    public class KeysControlViewModel : ViewModelBase, IDisposable
     {
         private readonly RedisProxy _redis;
         private readonly IServerContext _serverContext;
 
         private FileSystemBackedKeyCollection _keyCollection;
+        private VirtualizingCollection<string> _keysList;
+        private string _keyFilter = "";
+        private string _refreshButtonVisibility = "Visible";
+        private string _cancelButtonVisibility = "Hidden";
 
         private int _databaseId = 0;
         public int DatabaseId
@@ -27,8 +32,6 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        private string _keyFilter = "";
-
         public string KeyFilter
         {
             get => _keyFilter;
@@ -40,8 +43,6 @@ namespace GuiR.ViewModels.Keys
                 RaisePropertyChangedEvent(nameof(KeyFilter));
             }
         }
-
-        private VirtualizingCollection<string> _keysList;
 
         public VirtualizingCollection<string> KeysList
         {
@@ -55,6 +56,30 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
+        public string RefreshButtonVisibility
+        {
+            get => _refreshButtonVisibility;
+
+            set
+            {
+                _refreshButtonVisibility = value;
+
+                RaisePropertyChangedEvent(nameof(RefreshButtonVisibility));
+            }
+        }
+
+        public string CancelButtonVisibility
+        {
+            get => _cancelButtonVisibility;
+
+            set
+            {
+                _cancelButtonVisibility = value;
+
+                RaisePropertyChangedEvent(nameof(CancelButtonVisibility));
+            }
+        }
+
         public KeysControlViewModel(RedisProxy redis, IServerContext serverContext)
         {
             _redis = redis;
@@ -65,14 +90,18 @@ namespace GuiR.ViewModels.Keys
             new DelegateCommand(async () =>
             {
                 _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
+                _keyCollection.BackgroundLoadStarted += OnBackgroundKeyRefreshStarted;
+                _keyCollection.BackgroundLoadComplete += OnBackgroundKeyRefreshCompleted;
 
-                await Task.Delay(500);
+                _keyCollection.PopulateFileSystem();
+
+                await Task.Delay(250);
 
                 var keysSource = new KeyItemsProvider(_keyCollection);
 
                 KeysList = new VirtualizingCollection<string>(keysSource);
             });
-
+                          
         public ICommand FilterKeys =>
             new DelegateCommand(() =>
             {
@@ -80,5 +109,25 @@ namespace GuiR.ViewModels.Keys
 
                 KeysList = new VirtualizingCollection<string>(keysSource);
             });
+
+        private void OnBackgroundKeyRefreshStarted(object sender, System.EventArgs e)
+        {
+            CancelButtonVisibility = "Visible";
+            RefreshButtonVisibility = "Hidden";
+        }
+
+        private void OnBackgroundKeyRefreshCompleted(object sender, System.EventArgs e)
+        {
+            CancelButtonVisibility = "Hidden";
+            RefreshButtonVisibility = "Visible";
+        }
+
+        public void Dispose()
+        {
+            if (_keyCollection != default)
+            {
+                _keyCollection.Dispose();
+            }
+        }
     }
 }
