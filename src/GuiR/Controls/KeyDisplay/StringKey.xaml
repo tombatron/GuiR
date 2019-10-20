@@ -15,8 +15,15 @@
     </Behaviors:Interaction.Triggers>
     
     <Grid>
-        <ScrollViewer Margin="10,10,10,10" BorderBrush="Black" BorderThickness="5">
-            <TextBlock Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" TextWrapping="WrapWithOverflow" FontFamily="Consolas" />
+        <ScrollViewer Margin="0,10,10,10" BorderBrush="Black" BorderThickness="5">
+            <TextBox
+                Background="Transparent"
+                BorderThickness="1"
+                Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" 
+                TextWrapping="WrapWithOverflow" 
+                FontFamily="Consolas"
+                IsReadOnly="True"
+                />
         </ScrollViewer>
     </Grid>
 </UserControl>
