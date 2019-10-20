@@ -132,11 +132,17 @@
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
+    <Compile Include="Models\FileSystemBackedKeyCollection.cs" />
+    <Compile Include="Models\FilteredKeyItemsProvider.cs" />
     <Compile Include="Models\GeoPositionCollectionEntry.cs" />
     <Compile Include="Models\HashCollectionEntry.cs" />
+    <Compile Include="Models\KeyItemsProvider.cs" />
     <Compile Include="Models\NameValueCollectionEntry.cs" />
     <Compile Include="Models\SortedSetCollectionEntry.cs" />
     <Compile Include="Models\StreamCollectionEntry.cs" />
+    <Compile Include="Models\Virtualization\AsyncVirtualizingCollection.cs" />
+    <Compile Include="Models\Virtualization\IItemsProvider.cs" />
+    <Compile Include="Models\Virtualization\VirtualizingCollection.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
     <Compile Include="Redis\IServerContext.cs" />
     <Compile Include="Redis\RedisProxy.cs" />
@@ -271,8 +277,10 @@
   <ItemGroup>
     <Resource Include="redis_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Models\Virtualization\Attribution.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
   <Target Name="AfterResolveReferences">
     <ItemGroup>
       <EmbeddedResource Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'">
