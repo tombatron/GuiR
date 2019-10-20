@@ -76,6 +76,10 @@
 
         <keydisplay:KeyDisplayContainer x:Name="KeyContent" Grid.Row="1" Grid.Column="1" />
         
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" />
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" HorizontalAlignment="Stretch" >
+            <StatusBarItem HorizontalAlignment="Right">
+                <ProgressBar Height="10" Width="300" IsIndeterminate="{Binding IsBackgroundRefreshActive, UpdateSourceTrigger=PropertyChanged}"   />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </UserControl>

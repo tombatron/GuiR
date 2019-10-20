@@ -17,6 +17,7 @@ namespace GuiR.ViewModels.Keys
         private string _keyFilter = "";
         private string _refreshButtonVisibility = "Visible";
         private string _cancelButtonVisibility = "Hidden";
+        private bool _isBackgroundRefreshActive = false;
 
         private int _databaseId = 0;
         public int DatabaseId
@@ -80,6 +81,18 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
+        public bool IsBackgroundRefreshActive
+        {
+            get => _isBackgroundRefreshActive;
+
+            set
+            {
+                _isBackgroundRefreshActive = value;
+
+                RaisePropertyChangedEvent(nameof(IsBackgroundRefreshActive));
+            }
+        }
+
         public KeysControlViewModel(RedisProxy redis, IServerContext serverContext)
         {
             _redis = redis;
@@ -106,7 +119,7 @@ namespace GuiR.ViewModels.Keys
 
                 KeysList = new VirtualizingCollection<string>(keysSource);
             });
-                          
+
         public ICommand FilterKeys =>
             new DelegateCommand(() =>
             {
@@ -128,12 +141,14 @@ namespace GuiR.ViewModels.Keys
         {
             CancelButtonVisibility = "Visible";
             RefreshButtonVisibility = "Hidden";
+            IsBackgroundRefreshActive = true;
         }
 
         private void OnBackgroundKeyRefreshCompleted(object sender, System.EventArgs e)
         {
             CancelButtonVisibility = "Hidden";
             RefreshButtonVisibility = "Visible";
+            IsBackgroundRefreshActive = false;
         }
 
         public void Dispose()
