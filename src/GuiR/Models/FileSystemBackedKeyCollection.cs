@@ -82,7 +82,7 @@ namespace GuiR.Models
             }, cancelToken);
         }
 
-        private void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
+        public void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
 
         private IEnumerable<string> InternalEnumerable()
         {

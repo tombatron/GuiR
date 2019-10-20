@@ -89,6 +89,11 @@ namespace GuiR.ViewModels.Keys
         public ICommand RefreshKeys =>
             new DelegateCommand(async () =>
             {
+                if (_keyCollection != default)
+                {
+                    _keyCollection.Dispose();
+                }
+
                 _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
                 _keyCollection.BackgroundLoadStarted += OnBackgroundKeyRefreshStarted;
                 _keyCollection.BackgroundLoadComplete += OnBackgroundKeyRefreshCompleted;
@@ -108,6 +113,15 @@ namespace GuiR.ViewModels.Keys
                 var keysSource = new FilteredKeyItemsProvider(_keyCollection.FilterKeys(KeyFilter));
 
                 KeysList = new VirtualizingCollection<string>(keysSource);
+            });
+
+        public ICommand CancelRefreshKeys =>
+            new DelegateCommand(() =>
+            {
+                if (_keyCollection != default)
+                {
+                    _keyCollection.CancelBackgroundLoading();
+                }
             });
 
         private void OnBackgroundKeyRefreshStarted(object sender, System.EventArgs e)
