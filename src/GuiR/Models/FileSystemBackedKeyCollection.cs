@@ -17,8 +17,6 @@ namespace GuiR.Models
         private CancellationTokenSource _backgroundCancellationTokenSource;
 
         private Stream _writeStream;
-        private Stream _readStream;
-        private StreamReader _reader;
         private StreamWriter _writer;
 
         public event EventHandler BackgroundLoadStarted;
@@ -32,8 +30,6 @@ namespace GuiR.Models
             _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR");
             _cacheFile = Path.Combine(_filePath, $"{Guid.NewGuid().ToString("N")}.key_data");
             _writeStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            _readStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
-            _reader = new StreamReader(_readStream);
             _writer = new StreamWriter(_writeStream);
         }
 
@@ -68,7 +64,7 @@ namespace GuiR.Models
             {
                 foreach (var key in _baseKeyEnumeration)
                 {
-                    if(cancelToken.IsCancellationRequested)
+                    if (cancelToken.IsCancellationRequested)
                     {
                         return;
                     }
@@ -88,11 +84,15 @@ namespace GuiR.Models
 
         private IEnumerable<string> InternalEnumerable()
         {
-            string line;
-
-            while ((line = _reader.ReadLine()) != null)
+            using (var readStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(readStream))
             {
-                yield return line;
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
             }
         }
 
@@ -144,9 +144,7 @@ namespace GuiR.Models
             CancelBackgroundLoading();
 
             _writer.Dispose();
-            _reader.Dispose();
             _writeStream.Dispose();
-            _readStream.Dispose();
 
             // If we're done with the collection lets clean up the file system too.
             File.Delete(_cacheFile);
