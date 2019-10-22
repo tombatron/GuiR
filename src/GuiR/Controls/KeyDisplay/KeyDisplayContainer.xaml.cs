@@ -38,7 +38,7 @@ namespace GuiR.Controls.KeyDisplay
         {
             if (CurrentKey == default)
             {
-                KeyContent = null;
+                KeyContent.Content = null;
             }
             else
             {
