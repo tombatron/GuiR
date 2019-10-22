@@ -75,6 +75,8 @@
                 Grid.Row="0" 
                 Height="Auto" 
                 Margin="9,10,0,10" 
+                
+                x:Name="KeyList"
             
                 ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}"
             

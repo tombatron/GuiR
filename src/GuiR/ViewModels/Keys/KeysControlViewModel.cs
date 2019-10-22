@@ -111,9 +111,7 @@ namespace GuiR.ViewModels.Keys
                 _keyCollection.BackgroundLoadStarted += OnBackgroundKeyRefreshStarted;
                 _keyCollection.BackgroundLoadComplete += OnBackgroundKeyRefreshCompleted;
 
-                _keyCollection.PopulateFileSystem();
-
-                await Task.Delay(250);
+                await _keyCollection.PopulateFileSystemAsync();
 
                 var keysSource = new KeyItemsProvider(_keyCollection);
 

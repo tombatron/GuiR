@@ -21,6 +21,7 @@ namespace GuiR.Models
 
         public event EventHandler BackgroundLoadStarted;
         public event EventHandler BackgroundLoadComplete;
+        private bool _backgroundLoadComplete = false;
 
         public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
         {
@@ -41,6 +42,8 @@ namespace GuiR.Models
 
         protected virtual void OnBackgroundLoadStarted(EventArgs e)
         {
+            _backgroundLoadComplete = false;
+
             EventHandler handler = BackgroundLoadStarted;
 
             handler?.Invoke(this, e);
@@ -48,12 +51,14 @@ namespace GuiR.Models
 
         protected virtual void OnBackgroundLoadComplete(EventArgs e)
         {
+            _backgroundLoadComplete = true;
+
             EventHandler handler = BackgroundLoadComplete;
 
             handler?.Invoke(this, e);
         }
 
-        public void PopulateFileSystem()
+        public async ValueTask PopulateFileSystemAsync()
         {
             var cancelToken = _backgroundCancellationTokenSource.Token;
             cancelToken.Register(() => OnBackgroundLoadComplete(null));
@@ -78,6 +83,16 @@ namespace GuiR.Models
 
                 OnBackgroundLoadComplete(null);
             }, cancelToken);
+
+            while(!_backgroundLoadComplete)
+            {
+                if (Count >= 500)
+                {
+                    break;
+                }
+
+                await Task.Delay(50);
+            }
         }
 
         public void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
