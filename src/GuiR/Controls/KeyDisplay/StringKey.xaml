@@ -20,7 +20,7 @@
                 Background="Transparent"
                 BorderThickness="1"
                 Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" 
-                TextWrapping="WrapWithOverflow" 
+                TextWrapping="Wrap" 
                 FontFamily="Consolas"
                 IsReadOnly="True"
                 />
