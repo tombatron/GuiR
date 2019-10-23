@@ -132,6 +132,7 @@
       <DependentUpon>ServerList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
+    <Compile Include="Models\EmptyKeyItemsProvider.cs" />
     <Compile Include="Models\FileSystemBackedKeyCollection.cs" />
     <Compile Include="Models\FilteredKeyItemsProvider.cs" />
     <Compile Include="Models\GeoPositionCollectionEntry.cs" />

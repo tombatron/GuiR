@@ -28,6 +28,8 @@ namespace GuiR.ViewModels.Keys
                 _databaseId = value;
                 _serverContext.DatabaseId = value;
 
+                ClearKeysList();
+
                 RaisePropertyChangedEvent(nameof(DatabaseId));
             }
         }
@@ -151,6 +153,17 @@ namespace GuiR.ViewModels.Keys
 
         private void UpdateKeysList() =>
             KeysList = new VirtualizingCollection<string>(new KeyItemsProvider(_keyCollection));
+
+        private void ClearKeysList()
+        {
+            KeysList = new VirtualizingCollection<string>(new EmptyKeyItemsProvider());
+
+            if (_keyCollection != default)
+            {
+                _keyCollection.Dispose();
+                _keyCollection = default;
+            }
+        }
 
         public void Dispose()
         {

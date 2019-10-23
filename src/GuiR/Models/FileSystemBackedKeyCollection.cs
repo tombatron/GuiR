@@ -90,6 +90,7 @@ namespace GuiR.Models
                 {
                     if (cancelToken.IsCancellationRequested)
                     {
+                        progressTimer.Stop();
                         return;
                     }
 
