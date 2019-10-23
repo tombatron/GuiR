@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Timer = System.Timers.Timer;
 
 namespace GuiR.Models
 {
@@ -20,7 +21,9 @@ namespace GuiR.Models
         private StreamWriter _writer;
 
         public event EventHandler BackgroundLoadStarted;
+        public event EventHandler BackgroundLoadProgress;
         public event EventHandler BackgroundLoadComplete;
+
         private bool _backgroundLoadComplete = false;
 
         public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
@@ -40,7 +43,7 @@ namespace GuiR.Models
         public List<string> FilterKeys(string keyFilter) =>
             InternalEnumerable().Where(x => x.StartsWith(keyFilter)).ToList();
 
-        protected virtual void OnBackgroundLoadStarted(EventArgs e)
+        protected virtual void OnBackgroundLoadStarted(EventArgs e = null)
         {
             _backgroundLoadComplete = false;
 
@@ -49,7 +52,14 @@ namespace GuiR.Models
             handler?.Invoke(this, e);
         }
 
-        protected virtual void OnBackgroundLoadComplete(EventArgs e)
+        protected virtual void OnBackgroundLoadProgress(EventArgs e = null)
+        {
+            EventHandler handler = BackgroundLoadProgress;
+
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnBackgroundLoadComplete(EventArgs e = null)
         {
             _backgroundLoadComplete = true;
 
@@ -61,12 +71,21 @@ namespace GuiR.Models
         public async ValueTask PopulateFileSystemAsync()
         {
             var cancelToken = _backgroundCancellationTokenSource.Token;
-            cancelToken.Register(() => OnBackgroundLoadComplete(null));
+            cancelToken.Register(() => OnBackgroundLoadComplete());
 
-            OnBackgroundLoadStarted(null);
+            OnBackgroundLoadStarted();
 
             Task.Run(() =>
             {
+                void ProgressTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) => 
+                    OnBackgroundLoadProgress();
+
+                var progressTimer = new Timer();
+                progressTimer.Interval = 10_000;
+                progressTimer.Elapsed += ProgressTimer_Elapsed;
+
+                progressTimer.Start();
+
                 foreach (var key in _baseKeyEnumeration)
                 {
                     if (cancelToken.IsCancellationRequested)
@@ -81,7 +100,10 @@ namespace GuiR.Models
 
                 _writer.Flush();
 
-                OnBackgroundLoadComplete(null);
+                progressTimer.Stop();
+
+                OnBackgroundLoadProgress();
+                OnBackgroundLoadComplete();
             }, cancelToken);
 
             while(!_backgroundLoadComplete)

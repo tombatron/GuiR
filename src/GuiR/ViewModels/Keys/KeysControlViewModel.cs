@@ -2,7 +2,6 @@
 using GuiR.Models.Virtualization;
 using GuiR.Redis;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
@@ -109,13 +108,12 @@ namespace GuiR.ViewModels.Keys
 
                 _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
                 _keyCollection.BackgroundLoadStarted += OnBackgroundKeyRefreshStarted;
+                _keyCollection.BackgroundLoadProgress += OnBackgroundKeyRefreshProgress;
                 _keyCollection.BackgroundLoadComplete += OnBackgroundKeyRefreshCompleted;
 
                 await _keyCollection.PopulateFileSystemAsync();
 
-                var keysSource = new KeyItemsProvider(_keyCollection);
-
-                KeysList = new VirtualizingCollection<string>(keysSource);
+                UpdateKeysList();
             });
 
         public ICommand FilterKeys =>
@@ -135,19 +133,24 @@ namespace GuiR.ViewModels.Keys
                 }
             });
 
-        private void OnBackgroundKeyRefreshStarted(object sender, System.EventArgs e)
+        private void OnBackgroundKeyRefreshStarted(object sender, EventArgs e)
         {
             CancelButtonVisibility = "Visible";
             RefreshButtonVisibility = "Hidden";
             IsBackgroundRefreshActive = true;
         }
 
-        private void OnBackgroundKeyRefreshCompleted(object sender, System.EventArgs e)
+        private void OnBackgroundKeyRefreshProgress(object sender, EventArgs e) => UpdateKeysList();
+
+        private void OnBackgroundKeyRefreshCompleted(object sender, EventArgs e)
         {
             CancelButtonVisibility = "Hidden";
             RefreshButtonVisibility = "Visible";
             IsBackgroundRefreshActive = false;
         }
+
+        private void UpdateKeysList() =>
+            KeysList = new VirtualizingCollection<string>(new KeyItemsProvider(_keyCollection));
 
         public void Dispose()
         {
