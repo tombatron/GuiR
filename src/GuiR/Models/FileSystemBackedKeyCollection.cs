@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuiR.Redis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace GuiR.Models
 {
     public class FileSystemBackedKeyCollection : IList<string>, IDisposable
     {
-        private readonly IEnumerable<string> _baseKeyEnumeration;
+        private readonly KeyInfo _baseKeyEnumeration;
         private readonly string _filePath;
         private readonly string _cacheFile;
 
@@ -26,7 +27,7 @@ namespace GuiR.Models
 
         private bool _backgroundLoadComplete = false;
 
-        public FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration)
+        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
             _baseKeyEnumeration = baseKeyEnumeration;
@@ -75,9 +76,10 @@ namespace GuiR.Models
 
             OnBackgroundLoadStarted();
 
+#pragma warning disable CS4014 // We actually don't want to await this.
             Task.Run(() =>
             {
-                void ProgressTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) => 
+                void ProgressTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) =>
                     OnBackgroundLoadProgress();
 
                 var progressTimer = new Timer();
@@ -86,17 +88,20 @@ namespace GuiR.Models
 
                 progressTimer.Start();
 
-                foreach (var key in _baseKeyEnumeration)
+                using (_baseKeyEnumeration)
                 {
-                    if (cancelToken.IsCancellationRequested)
+                    foreach (var key in _baseKeyEnumeration.Keys)
                     {
-                        progressTimer.Stop();
-                        return;
+                        if (cancelToken.IsCancellationRequested)
+                        {
+                            progressTimer.Stop();
+                            return;
+                        }
+
+                        _writer.WriteLine(key);
+
+                        Count++;
                     }
-
-                    _writer.WriteLine(key);
-
-                    Count++;
                 }
 
                 _writer.Flush();
@@ -106,8 +111,9 @@ namespace GuiR.Models
                 OnBackgroundLoadProgress();
                 OnBackgroundLoadComplete();
             }, cancelToken);
+#pragma warning restore CS4014
 
-            while(!_backgroundLoadComplete)
+            while (!_backgroundLoadComplete)
             {
                 if (Count >= 500)
                 {
