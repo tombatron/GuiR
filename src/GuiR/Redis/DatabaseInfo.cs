@@ -10,5 +10,7 @@
             Id = id;
             KeyCount = keyCount;
         }
+
+        public override string ToString() => $"Id: {Id}, Keys: {KeyCount}";
     }
 }

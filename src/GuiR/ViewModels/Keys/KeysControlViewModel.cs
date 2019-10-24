@@ -27,8 +27,9 @@ namespace GuiR.ViewModels.Keys
 
             set
             {
-                _databaseId = value;
-                _serverContext.DatabaseId = value;
+                var selectedDatabase = Databases[value];
+                _databaseId = selectedDatabase.Id;
+                _serverContext.DatabaseId = selectedDatabase.Id;
 
                 ClearKeysList();
 
