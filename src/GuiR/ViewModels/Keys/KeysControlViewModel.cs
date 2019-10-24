@@ -108,7 +108,7 @@ namespace GuiR.ViewModels.Keys
                     _keyCollection.Dispose();
                 }
 
-                _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync(KeyFilter));
+                _keyCollection = new FileSystemBackedKeyCollection(await _redis.GetKeysAsync());
                 _keyCollection.BackgroundLoadStarted += OnBackgroundKeyRefreshStarted;
                 _keyCollection.BackgroundLoadProgress += OnBackgroundKeyRefreshProgress;
                 _keyCollection.BackgroundLoadComplete += OnBackgroundKeyRefreshCompleted;
