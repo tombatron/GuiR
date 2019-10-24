@@ -144,8 +144,10 @@
     <Compile Include="Models\Virtualization\AsyncVirtualizingCollection.cs" />
     <Compile Include="Models\Virtualization\IItemsProvider.cs" />
     <Compile Include="Models\Virtualization\VirtualizingCollection.cs" />
+    <Compile Include="Redis\ConnectionMultiplexerExtensions.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
     <Compile Include="Redis\IServerContext.cs" />
+    <Compile Include="Redis\KeyInfo.cs" />
     <Compile Include="Redis\RedisProxy.cs" />
     <Compile Include="Redis\RedisTypes.cs" />
     <Compile Include="Settings\FileSystemSettingsProvider.cs" />
