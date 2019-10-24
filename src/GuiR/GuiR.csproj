@@ -145,6 +145,7 @@
     <Compile Include="Models\Virtualization\IItemsProvider.cs" />
     <Compile Include="Models\Virtualization\VirtualizingCollection.cs" />
     <Compile Include="Redis\ConnectionMultiplexerExtensions.cs" />
+    <Compile Include="Redis\DatabaseInfo.cs" />
     <Compile Include="Redis\DefaultServerContext.cs" />
     <Compile Include="Redis\IServerContext.cs" />
     <Compile Include="Redis\KeyInfo.cs" />

@@ -3,6 +3,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +31,33 @@ namespace GuiR.Redis
                 var slowLogResult = await server.SlowlogGetAsync();
 
                 return default;
+            });
+
+        public ValueTask<ReadOnlyCollection<DatabaseInfo>> GetDatabaseInfoAsync() =>
+            WithServer(async (server) =>
+            {
+                var dbCountConfiguration = await server.ConfigGetAsync("databases");
+                var dbSizeInfo = await server.InfoAsync("keyspace");
+
+                var dbCount = int.Parse(dbCountConfiguration.First().Value);
+                var dbSizes = dbSizeInfo.First();
+
+                var result = new List<DatabaseInfo>(dbCount);
+
+                for (short i = 0; i < dbCount; i++)
+                {
+                    var size = 0;
+                    var sizeInfo = dbSizes.FirstOrDefault(d => d.Key == $"db{i}").Value;
+
+                    if (sizeInfo != null)
+                    {
+                        size = int.Parse(sizeInfo.Split(',').First().Split('=')[1]);
+                    }
+
+                    result.Add(new DatabaseInfo(i, size));
+                }
+
+                return new ReadOnlyCollection<DatabaseInfo>(result);
             });
 
         public ValueTask<KeyInfo> GetKeysAsync()
