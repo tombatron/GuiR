@@ -2,6 +2,7 @@
 using GuiR.Models.Virtualization;
 using GuiR.Redis;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
@@ -13,6 +14,7 @@ namespace GuiR.ViewModels.Keys
 
         private FileSystemBackedKeyCollection _keyCollection;
         private VirtualizingCollection<string> _keysList;
+        private ReadOnlyCollection<DatabaseInfo> _databases;
         private string _keyFilter = "";
         private string _refreshButtonVisibility = "Visible";
         private string _cancelButtonVisibility = "Hidden";
@@ -94,6 +96,18 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
+        public ReadOnlyCollection<DatabaseInfo> Databases
+        {
+            get => _databases;
+
+            set
+            {
+                _databases = value;
+
+                RaisePropertyChangedEvent(nameof(Databases));
+            }
+        }
+
         public KeysControlViewModel(RedisProxy redis, IServerContext serverContext)
         {
             _redis = redis;
@@ -133,6 +147,12 @@ namespace GuiR.ViewModels.Keys
                 {
                     _keyCollection.CancelBackgroundLoading();
                 }
+            });
+
+        public ICommand LoadDatabases =>
+            new DelegateCommand(async () => 
+            {
+                Databases = await _redis.GetDatabaseInfoAsync();
             });
 
         private void OnBackgroundKeyRefreshStarted(object sender, EventArgs e)

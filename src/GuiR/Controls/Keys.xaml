@@ -4,8 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:keydisplay="clr-namespace:GuiR.Controls.KeyDisplay"
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <Behaviors:Interaction.Triggers>
+        <Behaviors:EventTrigger EventName="Loaded">
+            <Behaviors:InvokeCommandAction Command="{Binding LoadDatabases}" />
+        </Behaviors:EventTrigger>
+    </Behaviors:Interaction.Triggers>
+    
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*" />
@@ -19,7 +27,7 @@
 
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -31,28 +39,22 @@
             </Grid.RowDefinitions>
 
             <Label Name="KeyFilterLabel" Grid.Row="0" Grid.Column="0" Margin="10,0">Key Filter</Label>
-            <TextBox Name="KeyFilter" HorizontalAlignment="Stretch" Height="20" Width="Auto" Margin="10,0" Grid.Column="0" Grid.Row="1" Text="{Binding KeyFilter, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Name="KeyFilter" HorizontalAlignment="Stretch" Width="Auto" Margin="10,0" Grid.Column="0" Grid.Row="1" Text="{Binding KeyFilter, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button Name="FilterButton" Width="100" Margin="10,0,10,0" Grid.Column="1" Grid.Row="1" Command="{Binding FilterKeys}">Filter</Button>
 
             <Label Name="DatabaseLabel" Grid.Row="0" Grid.Column="2" Margin="10,0">Database</Label>
-            <ComboBox Name="Database" Grid.Row="1" Grid.Column="2" Height="20" Width="50" SelectedIndex="{Binding DatabaseId, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBoxItem>0</ComboBoxItem>
-                <ComboBoxItem>1</ComboBoxItem>
-                <ComboBoxItem>2</ComboBoxItem>
-                <ComboBoxItem>3</ComboBoxItem>
-                <ComboBoxItem>4</ComboBoxItem>
-                <ComboBoxItem>5</ComboBoxItem>
-                <ComboBoxItem>6</ComboBoxItem>
-                <ComboBoxItem>7</ComboBoxItem>
-                <ComboBoxItem>8</ComboBoxItem>
-                <ComboBoxItem>9</ComboBoxItem>
-                <ComboBoxItem>10</ComboBoxItem>
-                <ComboBoxItem>11</ComboBoxItem>
-                <ComboBoxItem>12</ComboBoxItem>
-                <ComboBoxItem>13</ComboBoxItem>
-                <ComboBoxItem>14</ComboBoxItem>
-                <ComboBoxItem>15</ComboBoxItem>
+            <ComboBox Name="Database" Grid.Row="1" Grid.Column="2" Width="150" ItemsSource="{Binding Databases, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding DatabaseId, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Id}" />
+
+                            <Label Content="{Binding KeyCount}" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}" Visibility="{Binding RefreshButtonVisibility, UpdateSourceTrigger=PropertyChanged}">Refresh</Button>
