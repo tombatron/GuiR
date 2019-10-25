@@ -3,6 +3,7 @@ using GuiR.Models.Virtualization;
 using GuiR.Redis;
 using System;
 using System.Collections.ObjectModel;
+using System.Timers;
 using System.Windows.Input;
 
 namespace GuiR.ViewModels.Keys
@@ -18,7 +19,7 @@ namespace GuiR.ViewModels.Keys
         private string _keyFilter = "";
         private string _refreshButtonVisibility = "Visible";
         private string _cancelButtonVisibility = "Hidden";
-        private bool _isBackgroundRefreshActive = false;
+        private int _progressPercent;
 
         private int _databaseId = 0;
         public int DatabaseId
@@ -85,18 +86,6 @@ namespace GuiR.ViewModels.Keys
             }
         }
 
-        public bool IsBackgroundRefreshActive
-        {
-            get => _isBackgroundRefreshActive;
-
-            set
-            {
-                _isBackgroundRefreshActive = value;
-
-                RaisePropertyChangedEvent(nameof(IsBackgroundRefreshActive));
-            }
-        }
-
         public ReadOnlyCollection<DatabaseInfo> Databases
         {
             get => _databases;
@@ -106,6 +95,18 @@ namespace GuiR.ViewModels.Keys
                 _databases = value;
 
                 RaisePropertyChangedEvent(nameof(Databases));
+            }
+        }
+
+        public int ProgressPercent
+        {
+            get => _progressPercent;
+
+            set
+            {
+                _progressPercent = value;
+
+                RaisePropertyChangedEvent(nameof(ProgressPercent));
             }
         }
 
@@ -151,7 +152,7 @@ namespace GuiR.ViewModels.Keys
             });
 
         public ICommand LoadDatabases =>
-            new DelegateCommand(async () => 
+            new DelegateCommand(async () =>
             {
                 Databases = await _redis.GetDatabaseInfoAsync();
             });
@@ -160,7 +161,8 @@ namespace GuiR.ViewModels.Keys
         {
             CancelButtonVisibility = "Visible";
             RefreshButtonVisibility = "Hidden";
-            IsBackgroundRefreshActive = true;
+
+            StartBackgroundProgressMonitor();
         }
 
         private void OnBackgroundKeyRefreshProgress(object sender, EventArgs e) => UpdateKeysList();
@@ -169,7 +171,8 @@ namespace GuiR.ViewModels.Keys
         {
             CancelButtonVisibility = "Hidden";
             RefreshButtonVisibility = "Visible";
-            IsBackgroundRefreshActive = false;
+
+            StopBackgroundProgressMonitor();
         }
 
         private void UpdateKeysList() =>
@@ -184,6 +187,27 @@ namespace GuiR.ViewModels.Keys
                 _keyCollection.Dispose();
                 _keyCollection = default;
             }
+        }
+
+        private Timer progressMonitorTimer;
+
+        private void StartBackgroundProgressMonitor()
+        {
+            progressMonitorTimer = new Timer();
+            progressMonitorTimer.Interval = 1_000;
+            progressMonitorTimer.Elapsed += ProgressMonitorTimer_Elapsed;
+            progressMonitorTimer.Start();
+        }
+
+        private void ProgressMonitorTimer_Elapsed(object sender, ElapsedEventArgs e) =>
+            ProgressPercent = (int)(((double)_keyCollection.Count / _keyCollection.KeyInfo.KeyCount) * 100);
+
+        private void StopBackgroundProgressMonitor()
+        {
+            progressMonitorTimer.Stop();
+            progressMonitorTimer.Dispose();
+
+            ProgressPercent = 0;
         }
 
         public void Dispose()

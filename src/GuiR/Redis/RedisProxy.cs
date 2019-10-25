@@ -66,8 +66,9 @@ namespace GuiR.Redis
             var server = muxr.GetFirstServer();
 
             var keys = server.Keys(_serverContext.DatabaseId).Select(k => k.ToString());
+            var count = server.DatabaseSize(_serverContext.DatabaseId);
 
-            return new ValueTask<KeyInfo>(new KeyInfo(keys, muxr, 0));
+            return new ValueTask<KeyInfo>(new KeyInfo(keys, muxr, count));
         }
 
         public ValueTask<string> GetStringValueAsync(string key) =>

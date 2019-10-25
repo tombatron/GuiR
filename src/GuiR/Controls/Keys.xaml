@@ -84,7 +84,7 @@
 
         <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" HorizontalAlignment="Stretch" >
             <StatusBarItem HorizontalAlignment="Right">
-                <ProgressBar Height="10" Width="300" IsIndeterminate="{Binding IsBackgroundRefreshActive, UpdateSourceTrigger=PropertyChanged}"   />
+                <ProgressBar Height="10" Width="300"  Minimum="0" Maximum="100" Value="{Binding ProgressPercent, UpdateSourceTrigger=PropertyChanged}" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

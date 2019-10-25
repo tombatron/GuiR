@@ -10,9 +10,9 @@ namespace GuiR.Redis
 
         public ConnectionMultiplexer ConnectionMultiplexer { get; }
 
-        public int KeyCount { get; }
+        public long KeyCount { get; }
 
-        public KeyInfo(IEnumerable<string> keys, ConnectionMultiplexer connectionMultiplexer, int keyCount)
+        public KeyInfo(IEnumerable<string> keys, ConnectionMultiplexer connectionMultiplexer, long keyCount)
         {
             Keys = keys;
             ConnectionMultiplexer = connectionMultiplexer;

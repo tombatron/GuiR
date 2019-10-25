@@ -27,6 +27,8 @@ namespace GuiR.Models
 
         private bool _backgroundLoadComplete = false;
 
+        public KeyInfo KeyInfo => _baseKeyEnumeration;
+
         public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
