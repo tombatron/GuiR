@@ -65,7 +65,7 @@ namespace GuiR.Redis
             var muxr = ConnectionMultiplexer.Connect(_serverContext.ServerInfo);
             var server = muxr.GetFirstServer();
 
-            var keys = server.Keys(_serverContext.DatabaseId).Select(k => k.ToString());
+            var keys = server.Keys(_serverContext.DatabaseId, pageSize: 1_000).Select(k => k.ToString());
             var count = server.DatabaseSize(_serverContext.DatabaseId);
 
             return new ValueTask<KeyInfo>(new KeyInfo(keys, muxr, count));
