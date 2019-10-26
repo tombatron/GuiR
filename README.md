@@ -28,7 +28,7 @@ Currently has read-only support for the following Redis types...
 * Hash
 * Set
 * SortedSet
-  * Geo - 
+  * **Geo** - This data type isn't really anything other than a sorted set with built in handing that mutates the score of an item into a coordinate pair. 
 * HyperLogLog
 * Stream
 
@@ -57,3 +57,13 @@ In the future I intend to add the following:
   * Imagine if you stored binary ProtoBuf encoding blobs in Redis and you'd like to be able to audit them...
 
 (•_•) ( •_•)>⌐■-■ (⌐■_■)
+
+### Requirements
+
+Windows
+
+.NET Framework 4.7+ (There's no installer so you need to ensure you have this before executing the exe)
+
+- [Install .NET Framework 4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48)
+
+A Redis server to connect to.
