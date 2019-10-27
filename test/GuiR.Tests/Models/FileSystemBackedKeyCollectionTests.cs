@@ -40,7 +40,7 @@ namespace GuiR.Tests.Models
 
                 var eventFired = false;
 
-                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo);
+                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile);
 
                 collection.BackgroundLoadStarted += (object sender, System.EventArgs e) => eventFired = true;
 
@@ -66,7 +66,7 @@ namespace GuiR.Tests.Models
 
                 var eventFired = false;
 
-                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo);
+                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile);
 
                 collection.BackgroundLoadProgress += (object sender, System.EventArgs e) => eventFired = true;
 
@@ -99,7 +99,7 @@ namespace GuiR.Tests.Models
 
                 var eventFired = false;
 
-                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo);
+                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile);
 
                 collection.BackgroundLoadComplete += (object sender, System.EventArgs e) => eventFired = true;
 
