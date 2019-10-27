@@ -90,9 +90,27 @@ namespace GuiR.Tests.Models
 
         public class BackgroundLoadComplete
         {
+            [Fact]
             public async Task WillFireOnceEnumerationIsComplete()
             {
+                var fakeCacheFile = new FakeCacheFile();
 
+                var fakeKeyInfo = new KeyInfo(FakeEnumerable(), null, 0);
+
+                var eventFired = false;
+
+                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo);
+
+                collection.BackgroundLoadComplete += (object sender, System.EventArgs e) => eventFired = true;
+
+                await collection.PopulateFileSystemAsync();
+
+                Assert.True(eventFired);
+            }
+
+            private IEnumerable<string> FakeEnumerable()
+            {
+                yield break;
             }
         }
     }
