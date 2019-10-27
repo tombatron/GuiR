@@ -15,41 +15,58 @@ namespace GuiR.Models
         public interface ICacheFile : IDisposable
         {
             IEnumerable<string> ReadAllLines();
-            Task WriteLineAsync(string line);
-            Task FlushAsync();
+            void WriteLine(string line);
+            void Flush();
         }
 
         public class DefaultCacheFile : ICacheFile
         {
+            private readonly string _filePath;
+            private readonly string _filePathWithFileName;
+            private Stream _writeStream;
+            private StreamWriter _writer;
+
+            public DefaultCacheFile()
+            {
+                _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR");
+                _filePathWithFileName = Path.Combine(_filePath, $"{Guid.NewGuid().ToString("N")}.key_data");
+                _writeStream = new FileStream(_filePathWithFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+                _writer = new StreamWriter(_writeStream);
+            }
+
             public IEnumerable<string> ReadAllLines()
             {
-                throw new NotImplementedException();
+                using (var readStream = new FileStream(_filePathWithFileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(readStream))
+                {
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        yield return line;
+                    }
+                }
             }
 
-            public Task WriteLineAsync(string line)
-            {
-                throw new NotImplementedException();
-            }
+            public void WriteLine(string line) => _writer.WriteLine(line);
 
-            public Task FlushAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public void Flush() => _writer.Flush();
 
             public void Dispose()
             {
-                throw new NotImplementedException();
+                _writer.Dispose();
+                _writeStream.Dispose();
+
+                // If we're done with the collection lets clean up the file system too.
+                File.Delete(_filePathWithFileName);
             }
         }
 
         private readonly KeyInfo _baseKeyEnumeration;
-        private readonly string _filePath;
-        private readonly string _cacheFile;
 
         private CancellationTokenSource _backgroundCancellationTokenSource;
 
-        private Stream _writeStream;
-        private StreamWriter _writer;
+        private ICacheFile _cacheFile;
 
         public event EventHandler BackgroundLoadStarted;
         public event EventHandler BackgroundLoadProgress;
@@ -59,15 +76,14 @@ namespace GuiR.Models
 
         public KeyInfo KeyInfo => _baseKeyEnumeration;
 
-        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration)
+        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration) : 
+            this(baseKeyEnumeration, new DefaultCacheFile()) { }
+
+        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration, ICacheFile cacheFile)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
             _baseKeyEnumeration = baseKeyEnumeration;
-
-            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuiR");
-            _cacheFile = Path.Combine(_filePath, $"{Guid.NewGuid().ToString("N")}.key_data");
-            _writeStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            _writer = new StreamWriter(_writeStream);
+            _cacheFile = cacheFile;
         }
 
         public IList<string> FetchRange(int startIndex, int count) =>
@@ -115,7 +131,7 @@ namespace GuiR.Models
                     OnBackgroundLoadProgress();
 
                 var progressTimer = new Timer();
-                progressTimer.Interval = 10_000;
+                progressTimer.Interval = 500;
                 progressTimer.Elapsed += ProgressTimer_Elapsed;
 
                 progressTimer.Start();
@@ -130,13 +146,13 @@ namespace GuiR.Models
                             return;
                         }
 
-                        _writer.WriteLine(key);
+                        _cacheFile.WriteLine(key);
 
                         Count++;
                     }
                 }
 
-                _writer.Flush();
+                _cacheFile.Flush();
 
                 progressTimer.Stop();
 
@@ -158,19 +174,7 @@ namespace GuiR.Models
 
         public void CancelBackgroundLoading() => _backgroundCancellationTokenSource.Cancel();
 
-        private IEnumerable<string> InternalEnumerable()
-        {
-            using (var readStream = new FileStream(_cacheFile, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
-            using (var reader = new StreamReader(readStream))
-            {
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    yield return line;
-                }
-            }
-        }
+        private IEnumerable<string> InternalEnumerable() => _cacheFile.ReadAllLines();
 
         #region IList<string>
 
@@ -219,11 +223,7 @@ namespace GuiR.Models
             // we need to cancel the loading.
             CancelBackgroundLoading();
 
-            _writer.Dispose();
-            _writeStream.Dispose();
-
-            // If we're done with the collection lets clean up the file system too.
-            File.Delete(_cacheFile);
+            _cacheFile.Dispose();
         }
 
         #endregion
