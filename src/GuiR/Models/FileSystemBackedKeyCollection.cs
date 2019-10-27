@@ -12,6 +12,36 @@ namespace GuiR.Models
 {
     public class FileSystemBackedKeyCollection : IList<string>, IDisposable
     {
+        public interface ICacheFile : IDisposable
+        {
+            IEnumerable<string> ReadAllLines();
+            Task WriteLineAsync(string line);
+            Task FlushAsync();
+        }
+
+        public class DefaultCacheFile : ICacheFile
+        {
+            public IEnumerable<string> ReadAllLines()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteLineAsync(string line)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task FlushAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private readonly KeyInfo _baseKeyEnumeration;
         private readonly string _filePath;
         private readonly string _cacheFile;
