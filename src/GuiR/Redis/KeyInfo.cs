@@ -21,7 +21,10 @@ namespace GuiR.Redis
 
         public void Dispose()
         {
-            ConnectionMultiplexer.Dispose();
+            if (ConnectionMultiplexer != null)
+            {
+                ConnectionMultiplexer.Dispose();
+            }
         }
     }
 }
