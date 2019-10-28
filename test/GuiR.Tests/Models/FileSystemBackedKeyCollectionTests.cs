@@ -190,5 +190,46 @@ namespace GuiR.Tests.Models
                 }
             }
         }
+
+        public class CancelBackgroundLoading
+        {
+            [Fact]
+            public async Task WillStopBackgroundLoading()
+            {
+                var fakeCacheFile = new FakeCacheFile();
+
+                var fakeKeyInfo = new KeyInfo(FakeEnumerable(), null, 1_000_000);
+
+                var backgroundLoadComplete = false;
+
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    collection.BackgroundLoadComplete += (object sender, System.EventArgs e) => backgroundLoadComplete = true;
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    collection.PopulateFileSystemAsync();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    Assert.False(backgroundLoadComplete);
+
+                    collection.CancelBackgroundLoading();
+
+                    await Task.Delay(1_000);
+
+                    Assert.True(backgroundLoadComplete);
+                }
+            }
+
+            private IEnumerable<string> FakeEnumerable()
+            {
+                // This will take hours to finish. 
+                for (var i = 0; i < 1_000_000; i++)
+                {
+                    yield return string.Empty;
+
+                    Thread.Sleep(500);
+                }
+            }
+        }
     }
 }
