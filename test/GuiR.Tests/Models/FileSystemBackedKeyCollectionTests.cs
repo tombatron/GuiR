@@ -1,6 +1,7 @@
 ﻿using GuiR.Models;
 using GuiR.Redis;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,21 +12,17 @@ namespace GuiR.Tests.Models
     {
         private class FakeCacheFile : FileSystemBackedKeyCollection.ICacheFile
         {
-            public IEnumerable<string> ReadAllLines()
-            {
-                yield break;
-            }
+            private readonly List<string> _internalBuffer = new List<string>();
 
-            public void WriteLine(string line)
-            {
-            }
+            public IEnumerable<string> ReadAllLines() => _internalBuffer;
+
+            public void WriteLine(string line) => _internalBuffer.Add(line);
+
+            public void Dispose() => _internalBuffer.Clear();
 
             public void Flush()
             {
-            }
-
-            public void Dispose()
-            {
+                // NO OP
             }
         }
 
@@ -40,13 +37,14 @@ namespace GuiR.Tests.Models
 
                 var eventFired = false;
 
-                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile);
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    collection.BackgroundLoadStarted += (object sender, System.EventArgs e) => eventFired = true;
 
-                collection.BackgroundLoadStarted += (object sender, System.EventArgs e) => eventFired = true;
+                    await collection.PopulateFileSystemAsync();
 
-                await collection.PopulateFileSystemAsync();
-
-                Assert.True(eventFired);
+                    Assert.True(eventFired);
+                }
             }
 
             private IEnumerable<string> FakeEnumerable()
@@ -66,20 +64,21 @@ namespace GuiR.Tests.Models
 
                 var eventFired = false;
 
-                var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile);
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    collection.BackgroundLoadProgress += (object sender, System.EventArgs e) => eventFired = true;
 
-                collection.BackgroundLoadProgress += (object sender, System.EventArgs e) => eventFired = true;
+                    await collection.PopulateFileSystemAsync();
 
-                await collection.PopulateFileSystemAsync();
+                    await Task.Delay(10);
 
-                await Task.Delay(10);
-
-                Assert.True(eventFired);
+                    Assert.True(eventFired);
+                }
             }
 
             private IEnumerable<string> FakeEnumerable()
             {
-                while(true)
+                while (true)
                 {
                     Thread.Sleep(1);
 
@@ -111,6 +110,84 @@ namespace GuiR.Tests.Models
             private IEnumerable<string> FakeEnumerable()
             {
                 yield break;
+            }
+        }
+
+        public class PopulateFileSystemAsyncWithLessThan500Items
+        {
+            [Fact]
+            public async Task WillReturnIfBackgroundLoadIsComplete()
+            {
+                var fakeCacheFile = new FakeCacheFile();
+
+                var fakeKeyInfo = new KeyInfo(FakeEnumerable(), null, 1);
+
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    await collection.PopulateFileSystemAsync();
+
+                    Assert.Single(collection);
+                }
+            }
+
+            private IEnumerable<string> FakeEnumerable()
+            {
+                yield return string.Empty;
+            }
+        }
+
+        public class PopulateFileSystemAsyncWith500Items
+        {
+            [Fact]
+            public async Task WillReturnIfBackgroundLoadIsComplete()
+            {
+                var fakeCacheFile = new FakeCacheFile();
+
+                var fakeKeyInfo = new KeyInfo(FakeEnumerable(), null, 1);
+
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    await collection.PopulateFileSystemAsync();
+
+                    Assert.Equal(500, collection.Count);
+                }
+            }
+
+            private IEnumerable<string> FakeEnumerable() =>
+                Enumerable.Range(0, 500).Select(x => string.Empty);
+        }
+
+        public class PopulateFileSystemAsyncWithMoreThan500Items
+        {
+            [Fact]
+            public async Task WillReturnIfAtleast500ItemsHaveLoaded()
+            {
+                var fakeCacheFile = new FakeCacheFile();
+
+                var fakeKeyInfo = new KeyInfo(FakeEnumerable(), null, 1);
+
+                using (var collection = new FileSystemBackedKeyCollection(fakeKeyInfo, fakeCacheFile))
+                {
+                    await collection.PopulateFileSystemAsync();
+
+                    Assert.True(collection.Count >= 500);
+                }
+            }
+
+            private IEnumerable<string> FakeEnumerable()
+            {
+                for (var i = 0; i < 600; i++)
+                {
+                    yield return string.Empty;
+                }
+
+                // This is a little over 277 hours...
+                Thread.Sleep(1_000_000_000);
+
+                for (var i = 0; i < 1_000_000; i++)
+                {
+                    yield return string.Empty;
+                }
             }
         }
     }
