@@ -1,6 +1,7 @@
 ﻿using GuiR.Models.Virtualization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GuiR.Models
 {
@@ -8,25 +9,30 @@ namespace GuiR.Models
     {
         private readonly IEnumerable<string> _allKeys;
         private readonly string _filter;
-        private int _count = -1;
+        private readonly int _count;
 
-        public FilteredKeyItemsProvider(IEnumerable<string> allKeys, string filter)
+        private FilteredKeyItemsProvider(IEnumerable<string> allKeys, string filter, int count)
         {
             _allKeys = allKeys;
             _filter = filter;
+            _count = count;
         }
 
-        public int FetchCount()
-        {
-            if (_count < 0)
-            {
-                _count = _allKeys.Count(x => x.StartsWith(_filter));
-            }
-
-            return _count;
-        }
+        public int FetchCount() => _count;
 
         public IList<string> FetchRange(int startIndex, int count) =>
             _allKeys.Where(x => x.StartsWith(_filter)).Skip(startIndex).Take(count).ToList();
+
+        public static async ValueTask<FilteredKeyItemsProvider> CreateAsync(IEnumerable<string> allKeys, string filter)
+        {
+            int count = 0;
+
+            await Task.Run(() =>
+            {
+                count = allKeys.Count(x => x.StartsWith(filter));
+            });
+
+            return new FilteredKeyItemsProvider(allKeys, filter, count);
+        }
     }
 }

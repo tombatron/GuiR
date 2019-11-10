@@ -135,9 +135,9 @@ namespace GuiR.ViewModels.Keys
             });
 
         public ICommand FilterKeys =>
-            new DelegateCommand(() =>
+            new DelegateCommand(async () =>
             {
-                KeysList = new VirtualizingCollection<string>(_keyCollection.FilterKeys(KeyFilter));
+                KeysList = new VirtualizingCollection<string>(await _keyCollection.FilterKeysAsync(KeyFilter));
             });
 
         public ICommand CancelRefreshKeys =>

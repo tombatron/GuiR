@@ -76,8 +76,9 @@ namespace GuiR.Models
 
         public KeyInfo KeyInfo => _baseKeyEnumeration;
 
-        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration) : 
-            this(baseKeyEnumeration, new DefaultCacheFile()) { }
+        public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration) :
+            this(baseKeyEnumeration, new DefaultCacheFile())
+        { }
 
         public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration, ICacheFile cacheFile)
         {
@@ -89,8 +90,8 @@ namespace GuiR.Models
         public IList<string> FetchRange(int startIndex, int count) =>
             InternalEnumerable().Skip(startIndex).Take(count).ToList();
 
-        public FilteredKeyItemsProvider FilterKeys(string keyFilter) =>
-            new FilteredKeyItemsProvider(InternalEnumerable(), keyFilter);
+        public ValueTask<FilteredKeyItemsProvider> FilterKeysAsync(string keyFilter) =>
+            FilteredKeyItemsProvider.CreateAsync(InternalEnumerable(), keyFilter);
 
         protected virtual void OnBackgroundLoadStarted(EventArgs e = null)
         {
