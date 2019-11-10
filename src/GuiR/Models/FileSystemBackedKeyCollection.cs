@@ -89,8 +89,8 @@ namespace GuiR.Models
         public IList<string> FetchRange(int startIndex, int count) =>
             InternalEnumerable().Skip(startIndex).Take(count).ToList();
 
-        public List<string> FilterKeys(string keyFilter) =>
-            InternalEnumerable().Where(x => x.StartsWith(keyFilter)).ToList();
+        public FilteredKeyItemsProvider FilterKeys(string keyFilter) =>
+            new FilteredKeyItemsProvider(InternalEnumerable(), keyFilter);
 
         protected virtual void OnBackgroundLoadStarted(EventArgs e = null)
         {
