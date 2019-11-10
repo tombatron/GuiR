@@ -17,6 +17,8 @@ namespace GuiR.ViewModels.Keys
         private VirtualizingCollection<string> _keysList;
         private ReadOnlyCollection<DatabaseInfo> _databases;
         private string _keyFilter = "";
+        private string _filterButtonContent = "Filter";
+        private bool _filteringEnabled = true;
         private string _refreshButtonVisibility = "Visible";
         private string _cancelButtonVisibility = "Hidden";
         private int _progressPercent;
@@ -47,6 +49,30 @@ namespace GuiR.ViewModels.Keys
                 _keyFilter = value;
 
                 RaisePropertyChangedEvent(nameof(KeyFilter));
+            }
+        }
+
+        public string FilterButtonContent
+        {
+            get => _filterButtonContent;
+
+            set
+            {
+                _filterButtonContent = value;
+
+                RaisePropertyChangedEvent(nameof(FilterButtonContent));
+            }
+        }
+
+        public bool FilteringEnabled
+        {
+            get => _filteringEnabled;
+
+            set
+            {
+                _filteringEnabled = value;
+
+                RaisePropertyChangedEvent(nameof(FilteringEnabled));
             }
         }
 
@@ -137,7 +163,11 @@ namespace GuiR.ViewModels.Keys
         public ICommand FilterKeys =>
             new DelegateCommand(async () =>
             {
+                ToggleFiltering();
+
                 KeysList = new VirtualizingCollection<string>(await _keyCollection.FilterKeysAsync(KeyFilter));
+
+                ToggleFiltering();
             });
 
         public ICommand CancelRefreshKeys =>
@@ -206,6 +236,20 @@ namespace GuiR.ViewModels.Keys
             progressMonitorTimer.Dispose();
 
             ProgressPercent = 0;
+        }
+
+        private void ToggleFiltering()
+        {
+            if (FilterButtonContent.EndsWith("ing"))
+            {
+                FilterButtonContent = FilterButtonContent.TrimEnd("ing".ToCharArray());
+            }
+            else
+            {
+                FilterButtonContent += "ing";
+            }
+
+            FilteringEnabled = !FilteringEnabled;
         }
 
         public void Dispose()
