@@ -163,11 +163,18 @@ namespace GuiR.ViewModels.Keys
         public ICommand FilterKeys =>
             new DelegateCommand(async () =>
             {
-                ToggleFiltering();
+                if(string.IsNullOrEmpty(KeyFilter))
+                {
+                    UpdateKeysList();
+                }
+                else
+                {
+                    ToggleFiltering();
 
-                KeysList = new VirtualizingCollection<string>(await _keyCollection.FilterKeysAsync(KeyFilter));
+                    KeysList = new VirtualizingCollection<string>(await _keyCollection.FilterKeysAsync(KeyFilter));
 
-                ToggleFiltering();
+                    ToggleFiltering();
+                }
             });
 
         public ICommand CancelRefreshKeys =>
@@ -189,6 +196,7 @@ namespace GuiR.ViewModels.Keys
         {
             CancelButtonVisibility = "Visible";
             RefreshButtonVisibility = "Hidden";
+            FilteringEnabled = false;
 
             StartBackgroundProgressMonitor();
         }
@@ -199,6 +207,7 @@ namespace GuiR.ViewModels.Keys
         {
             CancelButtonVisibility = "Hidden";
             RefreshButtonVisibility = "Visible";
+            FilteringEnabled = true;
 
             StopBackgroundProgressMonitor();
         }

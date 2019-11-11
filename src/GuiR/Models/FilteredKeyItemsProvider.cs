@@ -9,30 +9,59 @@ namespace GuiR.Models
     {
         private readonly IEnumerable<string> _allKeys;
         private readonly string _filter;
-        private readonly int _count;
+        private readonly List<int> _index;
 
-        private FilteredKeyItemsProvider(IEnumerable<string> allKeys, string filter, int count)
+        private FilteredKeyItemsProvider(IEnumerable<string> allKeys, string filter, List<int> index)
         {
             _allKeys = allKeys;
             _filter = filter;
-            _count = count;
+            _index = index;
         }
 
-        public int FetchCount() => _count;
+        public int FetchCount() => _index.Count;
 
-        public IList<string> FetchRange(int startIndex, int count) =>
-            _allKeys.Where(x => x.StartsWith(_filter)).Skip(startIndex).Take(count).ToList();
+        public IList<string> FetchRange(int startIndex, int count)
+        {
+            var rangeIndex = _index.Skip(startIndex).Take(count);
+            var range = new List<string>();
+            var i = 0;
+
+            IEnumerable<string> currentEnumerable = _allKeys;
+
+            foreach (var ri in rangeIndex)
+            {
+                currentEnumerable = currentEnumerable.Skip(ri - i);
+
+                range.Add(currentEnumerable.Take(1).First());
+
+                i = ri;
+            }
+
+            return range;
+        }
 
         public static async ValueTask<FilteredKeyItemsProvider> CreateAsync(IEnumerable<string> allKeys, string filter)
         {
-            int count = 0;
+            var index = new List<int>();
+            var i = 0;
 
-            await Task.Run(() =>
+            if (!string.IsNullOrEmpty(filter))
             {
-                count = allKeys.Count(x => x.StartsWith(filter));
-            });
+                await Task.Run(() =>
+                {
+                    foreach (var key in allKeys)
+                    {
+                        if (key.StartsWith(filter))
+                        {
+                            index.Add(i);
+                        }
 
-            return new FilteredKeyItemsProvider(allKeys, filter, count);
+                        i++;
+                    }
+                });
+            }
+
+            return new FilteredKeyItemsProvider(allKeys, filter, index);
         }
     }
 }

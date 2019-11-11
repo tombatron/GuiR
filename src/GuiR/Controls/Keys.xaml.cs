@@ -24,5 +24,11 @@ namespace GuiR.Controls
         private void Database_SelectionChanged(object sender, SelectionChangedEventArgs e) => KeyList.SelectedIndex = -1;
 
         private void Keys_Unloaded(object sender, System.Windows.RoutedEventArgs e) => _viewModel.Dispose();
+
+        private void FilterButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            KeyList.ScrollIntoView(KeyList.Items[0]);
+            KeyList.SelectedIndex = -1;
+        } 
     }
 }
