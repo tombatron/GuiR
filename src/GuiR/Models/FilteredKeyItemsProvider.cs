@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static GuiR.Models.FileSystemBackedKeyCollection;
 
 namespace GuiR.Models
 {
     public class FilteredKeyItemsProvider : IItemsProvider<string>
     {
-        private readonly IEnumerable<string> _allKeys;
+        private readonly ICacheFile _cacheFile;
         private readonly string _filter;
         private readonly List<int> _index;
 
-        private FilteredKeyItemsProvider(IEnumerable<string> allKeys, string filter, List<int> index)
+        private FilteredKeyItemsProvider(ICacheFile cacheFile, string filter, List<int> index)
         {
-            _allKeys = allKeys;
+            _cacheFile = cacheFile;
             _filter = filter;
             _index = index;
         }
@@ -22,25 +23,17 @@ namespace GuiR.Models
 
         public IList<string> FetchRange(int startIndex, int count)
         {
-            var rangeIndex = _index.Skip(startIndex).Take(count);
-            var range = new List<string>();
-            var i = 0;
+            var result = new List<string>();
 
-            IEnumerable<string> currentEnumerable = _allKeys;
-
-            foreach (var ri in rangeIndex)
+            foreach (var i in _index.Skip(startIndex).Take(count))
             {
-                currentEnumerable = currentEnumerable.Skip(ri - i);
-
-                range.Add(currentEnumerable.Take(1).First());
-
-                i = ri;
+                result.Add(_cacheFile.ReadAtLine(i));
             }
 
-            return range;
+            return result;
         }
 
-        public static async ValueTask<FilteredKeyItemsProvider> CreateAsync(IEnumerable<string> allKeys, string filter)
+        public static async ValueTask<FilteredKeyItemsProvider> CreateAsync(ICacheFile cacheFile, string filter)
         {
             var index = new List<int>();
             var i = 0;
@@ -49,7 +42,7 @@ namespace GuiR.Models
             {
                 await Task.Run(() =>
                 {
-                    foreach (var key in allKeys)
+                    foreach (var key in cacheFile.ReadAllLines())
                     {
                         if (key.StartsWith(filter))
                         {
@@ -61,7 +54,7 @@ namespace GuiR.Models
                 });
             }
 
-            return new FilteredKeyItemsProvider(allKeys, filter, index);
+            return new FilteredKeyItemsProvider(cacheFile, filter, index);
         }
     }
 }

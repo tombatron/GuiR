@@ -15,6 +15,7 @@ namespace GuiR.Models
         public interface ICacheFile : IDisposable
         {
             IEnumerable<string> ReadAllLines();
+            string ReadAtLine(int lineNumber);
             void WriteLine(string line);
             void Flush();
         }
@@ -48,11 +49,40 @@ namespace GuiR.Models
                 }
             }
 
+            public string ReadAtLine(int lineNumber)
+            {
+                using (var readStream = new FileStream(_filePathWithFileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(readStream))
+                {
+                    var i = 0;
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (i == lineNumber)
+                        {
+                            return line;
+                        }
+
+                        i++;
+                    }
+                }
+
+                return default;
+            }
+
             public void WriteLine(string line) => _writer.WriteLine(line);
 
             public void Flush() => _writer.Flush();
 
             public void Dispose()
+            {
+                Dispose(true);
+
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool what)
             {
                 _writer.Dispose();
                 _writeStream.Dispose();
@@ -80,6 +110,10 @@ namespace GuiR.Models
             this(baseKeyEnumeration, new DefaultCacheFile())
         { }
 
+        private FileSystemBackedKeyCollection(IEnumerable<string> baseKeyEnumeration) :
+            this(new KeyInfo(baseKeyEnumeration, null, 0))
+        { }
+
         public FileSystemBackedKeyCollection(KeyInfo baseKeyEnumeration, ICacheFile cacheFile)
         {
             _backgroundCancellationTokenSource = new CancellationTokenSource();
@@ -90,8 +124,8 @@ namespace GuiR.Models
         public IList<string> FetchRange(int startIndex, int count) =>
             InternalEnumerable().Skip(startIndex).Take(count).ToList();
 
-        public ValueTask<FilteredKeyItemsProvider> FilterKeysAsync(string keyFilter) =>
-            FilteredKeyItemsProvider.CreateAsync(InternalEnumerable(), keyFilter);
+        public FileSystemBackedKeyCollection FilterKeys(string keyFilter) =>
+            new FileSystemBackedKeyCollection(InternalEnumerable().Where(x => x.StartsWith(keyFilter)));
 
         protected virtual void OnBackgroundLoadStarted(EventArgs e = null)
         {
@@ -220,11 +254,20 @@ namespace GuiR.Models
 
         public void Dispose()
         {
-            // If we're done with this collection before we're done loading the backing file
-            // we need to cancel the loading.
-            CancelBackgroundLoading();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            _cacheFile.Dispose();
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // If we're done with this collection before we're done loading the backing file
+                // we need to cancel the loading.
+                CancelBackgroundLoading();
+
+                _cacheFile.Dispose();
+            }
         }
 
         #endregion

@@ -3,6 +3,8 @@ using GuiR.Models.Virtualization;
 using GuiR.Redis;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
 
@@ -14,6 +16,7 @@ namespace GuiR.ViewModels.Keys
         private readonly IServerContext _serverContext;
 
         private FileSystemBackedKeyCollection _keyCollection;
+        private List<FileSystemBackedKeyCollection> _filteredKeyCollections;
         private VirtualizingCollection<string> _keysList;
         private ReadOnlyCollection<DatabaseInfo> _databases;
         private string _keyFilter = "";
@@ -169,9 +172,20 @@ namespace GuiR.ViewModels.Keys
                 }
                 else
                 {
+                    if (_filteredKeyCollections == default)
+                    {
+                        _filteredKeyCollections = new List<FileSystemBackedKeyCollection>();
+                    }
+
                     ToggleFiltering();
 
-                    KeysList = new VirtualizingCollection<string>(await _keyCollection.FilterKeysAsync(KeyFilter));
+                    var filteredKeys = _keyCollection.FilterKeys(KeyFilter);
+
+                    _filteredKeyCollections.Add(filteredKeys);
+
+                    await filteredKeys.PopulateFileSystemAsync();
+
+                    KeysList = new VirtualizingCollection<string>(new KeyItemsProvider(filteredKeys));
 
                     ToggleFiltering();
                 }
@@ -263,9 +277,26 @@ namespace GuiR.ViewModels.Keys
 
         public void Dispose()
         {
-            if (_keyCollection != default)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                _keyCollection.Dispose();
+                if (_keyCollection != default)
+                {
+                    _keyCollection.Dispose();
+                }
+
+                if (_filteredKeyCollections != default)
+                {
+                    foreach(var collection in _filteredKeyCollections)
+                    {
+                        collection.Dispose();
+                    }
+                }
             }
         }
     }
