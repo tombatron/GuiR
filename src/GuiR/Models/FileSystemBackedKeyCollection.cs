@@ -15,7 +15,6 @@ namespace GuiR.Models
         public interface ICacheFile : IDisposable
         {
             IEnumerable<string> ReadAllLines();
-            string ReadAtLine(int lineNumber);
             void WriteLine(string line);
             void Flush();
         }
@@ -47,28 +46,6 @@ namespace GuiR.Models
                         yield return line;
                     }
                 }
-            }
-
-            public string ReadAtLine(int lineNumber)
-            {
-                using (var readStream = new FileStream(_filePathWithFileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
-                using (var reader = new StreamReader(readStream))
-                {
-                    var i = 0;
-                    string line;
-
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (i == lineNumber)
-                        {
-                            return line;
-                        }
-
-                        i++;
-                    }
-                }
-
-                return default;
             }
 
             public void WriteLine(string line) => _writer.WriteLine(line);
