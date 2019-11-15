@@ -25,10 +25,12 @@ namespace GuiR.Controls
 
         private void Keys_Unloaded(object sender, System.Windows.RoutedEventArgs e) => _viewModel.Dispose();
 
-        private void FilterButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void KeyList_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
-            KeyList.ScrollIntoView(KeyList.Items[0]);
-            KeyList.SelectedIndex = -1;
-        } 
+            if (KeyList.Items.Count > 0)
+            {
+                KeyList.ScrollIntoView(KeyList.Items[0]);
+            }
+        }
     }
 }

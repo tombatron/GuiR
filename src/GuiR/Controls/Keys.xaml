@@ -41,11 +41,10 @@
             <Label Name="KeyFilterLabel" Grid.Row="0" Grid.Column="0" Margin="10,0">Key Filter</Label>
             <TextBox Name="KeyFilter" HorizontalAlignment="Stretch" Width="Auto" Margin="10,0" Grid.Column="0" Grid.Row="1" Text="{Binding KeyFilter, UpdateSourceTrigger=PropertyChanged}" />
 
-            <Button Name="FilterButton" Width="100" Margin="10,0,10,0" Grid.Column="1" Grid.Row="1" Command="{Binding FilterKeys}" Content="{Binding FilterButtonContent, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FilteringEnabled, UpdateSourceTrigger=PropertyChanged}" Click="FilterButton_Click" />
+            <Button Name="FilterButton" Width="100" Margin="10,0,10,0" Grid.Column="1" Grid.Row="1" Command="{Binding FilterKeys}" Content="{Binding FilterButtonContent, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FilteringEnabled, UpdateSourceTrigger=PropertyChanged}" />
 
             <Label Name="DatabaseLabel" Grid.Row="0" Grid.Column="2" Margin="10,0">Database</Label>
             <ComboBox Name="Database" Grid.Row="1" Grid.Column="2" Width="150" ItemsSource="{Binding Databases, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding DatabaseId, UpdateSourceTrigger=PropertyChanged}" />
-
 
             <Button Name="RefreshButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding RefreshKeys}" Visibility="{Binding RefreshButtonVisibility, UpdateSourceTrigger=PropertyChanged}">Refresh</Button>
             <Button Name="CancelButton" Width="100" Margin="10,0,10,0" Grid.Column="3" Grid.Row="1" Command="{Binding CancelRefreshKeys}" Visibility="{Binding CancelButtonVisibility, UpdateSourceTrigger=PropertyChanged}">Cancel</Button>
@@ -73,6 +72,8 @@
                 ItemsSource="{Binding KeysList, UpdateSourceTrigger=PropertyChanged}"
             
                 SelectedItem="{Binding ElementName=KeyContent, Path=CurrentKey}"
+                
+                TargetUpdated="KeyList_TargetUpdated"
             
                 VirtualizingStackPanel.IsVirtualizing="True"
             />
