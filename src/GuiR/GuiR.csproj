@@ -1,268 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{48A08AF9-7752-4473-A141-3BF387ADDBCB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>GuiR</RootNamespace>
-    <AssemblyName>GuiR</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <AssemblyName>GuiR</AssemblyName>    
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.InteropServices" />
-    <Reference Include="System.Threading.Thread" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <None Remove="redis_logo.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Configuration\Modules\ContextModule.cs" />
-    <Compile Include="Configuration\Modules\RedisModule.cs" />
-    <Compile Include="Configuration\Modules\SettingsModule.cs" />
-    <Compile Include="Configuration\Modules\ViewModelModule.cs" />
-    <Compile Include="Controls\KeyDisplay\HashKey.xaml.cs">
-      <DependentUpon>HashKey.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\HyperLogLogKey.cs" />
-    <Compile Include="Controls\KeyDisplay\KeyDisplayContainer.xaml.cs">
-      <DependentUpon>KeyDisplayContainer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\ListKey.xaml.cs">
-      <DependentUpon>ListKey.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\SetKey.cs" />
-    <Compile Include="Controls\KeyDisplay\SortedSetKey.xaml.cs">
-      <DependentUpon>SortedSetKey.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\SortedSet\Default.xaml.cs">
-      <DependentUpon>Default.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\SortedSet\Geo.xaml.cs">
-      <DependentUpon>Geo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\StreamKey.xaml.cs">
-      <DependentUpon>StreamKey.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KeyDisplay\StringKey.xaml.cs">
-      <DependentUpon>StringKey.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ServerList.xaml.cs">
-      <DependentUpon>ServerList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ServerTree\IServerSubTreeViewItem.cs" />
-    <Compile Include="Models\EmptyKeyItemsProvider.cs" />
-    <Compile Include="Models\FileSystemBackedKeyCollection.cs" />
-    <Compile Include="Models\GeoPositionCollectionEntry.cs" />
-    <Compile Include="Models\HashCollectionEntry.cs" />
-    <Compile Include="Models\KeyItemsProvider.cs" />
-    <Compile Include="Models\NameValueCollectionEntry.cs" />
-    <Compile Include="Models\SortedSetCollectionEntry.cs" />
-    <Compile Include="Models\StreamCollectionEntry.cs" />
-    <Compile Include="Models\Virtualization\AsyncVirtualizingCollection.cs" />
-    <Compile Include="Models\Virtualization\IItemsProvider.cs" />
-    <Compile Include="Models\Virtualization\VirtualizingCollection.cs" />
-    <Compile Include="Redis\ConnectionMultiplexerExtensions.cs" />
-    <Compile Include="Redis\DatabaseInfo.cs" />
-    <Compile Include="Redis\DefaultServerContext.cs" />
-    <Compile Include="Redis\IServerContext.cs" />
-    <Compile Include="Redis\KeyInfo.cs" />
-    <Compile Include="Redis\RedisProxy.cs" />
-    <Compile Include="Redis\RedisTypes.cs" />
-    <Compile Include="Settings\FileSystemSettingsProvider.cs" />
-    <Compile Include="Settings\ISettingsProvider.cs" />
-    <Compile Include="ViewModels\DelegateCommand.cs" />
-    <Compile Include="ViewModels\Info\InfoControlViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\HashKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\HyperLogLogKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\ListKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\SetKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\SortedSet\DefaultViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\SortedSet\GeoViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\StreamKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeyDisplay\StringKeyViewModel.cs" />
-    <Compile Include="ViewModels\Keys\KeysControlViewModel.cs" />
-    <Compile Include="ViewModels\MainWindow.cs" />
-    <Compile Include="ViewModels\NewServer.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\NewServerDialog.xaml.cs">
-      <DependentUpon>NewServerDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\Info.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\HashKey.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\KeyDisplayContainer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\ListKey.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\SortedSetKey.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\SortedSet\Default.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\SortedSet\Geo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\StreamKey.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KeyDisplay\StringKey.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Keys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ServerList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SlowLog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Configuration\ServiceLocator.cs" />
-    <Compile Include="Controls\Info.xaml.cs">
-      <DependentUpon>Info.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Keys.xaml.cs">
-      <DependentUpon>Keys.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ServerTree\InfoSubTreeViewItem.cs" />
-    <Compile Include="Controls\ServerTree\KeysSubTreeViewItem.cs" />
-    <Compile Include="Controls\ServerTree\ServerListTreeView.cs" />
-    <Compile Include="Controls\ServerTree\ServerTreeViewItem.cs" />
-    <Compile Include="Controls\ServerTree\SlowLogSubTreeViewItem.cs" />
-    <Compile Include="Controls\SlowLog.xaml.cs">
-      <DependentUpon>SlowLog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\NewServerDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\RedisServerInformation.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="redis_logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Models\Virtualization\Attribution.txt" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>4.9.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
-      <Version>1.0.1</Version>
+      <Version>1.1.3</Version>
     </PackageReference>
     <PackageReference Include="StackExchange.Redis">
       <Version>2.0.601</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterResolveReferences">
-    <ItemGroup>
-      <EmbeddedResource Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'">
-        <LogicalName>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</LogicalName>
-      </EmbeddedResource>
-    </ItemGroup>
-  </Target>
+
+  <ItemGroup>
+    <Resource Include="redis_logo.png" />
+  </ItemGroup>
 </Project>
